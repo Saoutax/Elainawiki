@@ -1,10 +1,9 @@
-
 /* Ruby 模板 */
-rb[data-id="template-ruby"]::before {
-    content: "";
+rb[data-id='template-ruby']::before {
+    content: '';
 }
 
-rb[data-id="template-ruby"]::before,
+rb[data-id='template-ruby']::before,
 .template-ruby-hidden {
     display: inline-block;
     width: 0;
@@ -107,7 +106,7 @@ s.just-kidding-text {
 
 .infoBoxText {
     display: table-cell;
-    padding: .25em .5em .25em 1.3em;
+    padding: 0.25em 0.5em 0.25em 1.3em;
     width: 100%;
     vertical-align: middle;
 }
@@ -117,7 +116,6 @@ s.just-kidding-text {
     border-left-width: 0;
     background: #fbfbfb;
 }
-
 
 /* Template:Mbox
 ---------------------------------------- */
@@ -159,54 +157,51 @@ s.just-kidding-text {
 }
 
 .mbox-info {
-    border-color: #0073CF;
-    background: #E6F2FF;
+    border-color: #0073cf;
+    background: #e6f2ff;
 }
 
 .mbox-caution {
-    border-color: #E67E00;
-    background: #FFF4DB;
+    border-color: #e67e00;
+    background: #fff4db;
 }
 
 .mbox-warn {
-    border-color: #E53935;
-    background: #FDECEC;
-
+    border-color: #e53935;
+    background: #fdecec;
 }
 
 .mbox-delete {
-    border-color: #B71C1C;
-background: #FBE9E7;
-
+    border-color: #b71c1c;
+    background: #fbe9e7;
 }
 
 .mbox-policy {
-    border-color: #2E7D32;
-    background: #E8F5E9;
-
+    border-color: #2e7d32;
+    background: #e8f5e9;
 }
 
 .mbox-essay {
-    border-color: #6F42C1;
-    background: #F0E9FF;
+    border-color: #6f42c1;
+    background: #f0e9ff;
 }
 
 .mbox-help {
-    border-color: #17A2B8;
-    background: #E6F9FC;
+    border-color: #17a2b8;
+    background: #e6f9fc;
 }
 
 .mbox-draft {
-    border-color: #C0A000;
-    background: #FFF8CC;
+    border-color: #c0a000;
+    background: #fff8cc;
 }
 
 .mbox-license {
     border-color: #795548;
-    background: #F5EDE6;
+    background: #f5ede6;
 }
 
 .mbox-copyright {
     border-color: #795548;
-    background: #F5EDE6;
+    background: #f5ede6;
 }

@@ -1,11 +1,12 @@
 - section: User
   gadgets:
-    - popups
+      - popups
+      - MarkRights
 
 - section: Admin
   gadgets:
-    - CleanDeleteReasons
+      - CleanDeleteReasons
 
 - section: Site
   gadgets:
-    - SiteTemplate
+      - SiteTemplate
