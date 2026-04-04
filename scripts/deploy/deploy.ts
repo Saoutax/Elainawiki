@@ -3,7 +3,7 @@ import { contentHash, needDeploy } from './utils';
 import 'dotenv/config';
 
 const deploy = async () => {
-    const bot = new Mwn({
+    const bot = await Mwn.init({
         apiUrl: 'https://elaina.miraheze.org/w/api.php',
         userAgent: `${process.env['USERAGENT']} (Github Actions; Saoutax-bot)`,
         username: 'MisakaNetwork@MisakaNetwork',
