@@ -1,0 +1,16 @@
+ResourceLoader: true
+
+hidden: true
+
+default: true
+
+type: styles
+
+rights: []
+
+dependencies: []
+
+enable: true
+
+files:
+    - Gadget-SiteTemplate.css
