@@ -20,7 +20,7 @@ const transpileCss: FileProcessor = async file => {
     const { code } = transform({
         filename: file,
         code: Buffer.from(source),
-        minify: false,
+        minify: true,
         sourceMap: false,
     });
     return code;

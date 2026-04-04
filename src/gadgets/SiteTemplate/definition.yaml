@@ -4,9 +4,25 @@ hidden: true
 
 default: true
 
+supportsUrlLoad: false
+
+skins: []
+
+actions: []
+
+categories: []
+
+namespaces: []
+
+contentModels: []
+
 type: styles
 
+package: false
+
 rights: []
+
+peers: []
 
 dependencies: []
 

@@ -4,9 +4,25 @@ hidden: false
 
 default: false
 
+supportsUrlLoad: false
+
+skins: []
+
+actions: []
+
+categories: []
+
+namespaces: []
+
+contentModels: []
+
 type: general
 
+package: false
+
 rights: []
+
+peers: []
 
 dependencies:
     - mediawiki.user

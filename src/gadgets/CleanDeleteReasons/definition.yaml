@@ -4,10 +4,27 @@ hidden: false
 
 default: true
 
+supportsUrlLoad: false
+
+skins: []
+
+actions:
+    - delete
+
+categories: []
+
+namespaces: []
+
+contentModels: []
+
 type: general
+
+package: false
 
 rights:
     - delete
+
+peers: []
 
 dependencies: []
 
