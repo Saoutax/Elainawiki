@@ -20,8 +20,7 @@ type: styles
 
 package: false
 
-rights:
-    - delete
+rights: []
 
 peers: []
 
