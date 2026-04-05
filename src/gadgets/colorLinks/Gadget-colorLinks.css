@@ -1,14 +1,14 @@
-a.extiw:not([href*="saozh.miraheze.org"]),
-a.extiw:not([href*="saozh.miraheze.org"]):visited,
-body.heimu_toggle_on span.heimu a.extiw:not([href*="saozh.miraheze.org"]),
-body.heimu_toggle_on a.extiw:not([href*="saozh.miraheze.org"]) span.heimu{
+a.extiw:not([href*="elaina.miraheze.org"]),
+a.extiw:not([href*="elaina.miraheze.org"]):visited,
+body.heimu_toggle_on span.heimu a.extiw:not([href*="elaina.miraheze.org"]),
+body.heimu_toggle_on a.extiw:not([href*="elaina.miraheze.org"]) span.heimu{
     color: #00AF89;
 }
 
-.heimu:hover a.extiw:not([href*="saozh.miraheze.org"]),
-.heimu:hover a.extiw:not([href*="saozh.miraheze.org"]):visited,
-a.extiw:not([href*="saozh.miraheze.org"]):hover .heimu,
-a.extiw:not([href*="saozh.miraheze.org"]):hover:visited .heimu{
+.heimu:hover a.extiw:not([href*="elaina.miraheze.org"]),
+.heimu:hover a.extiw:not([href*="elaina.miraheze.org"]):visited,
+a.extiw:not([href*="elaina.miraheze.org"]):hover .heimu,
+a.extiw:not([href*="elaina.miraheze.org"]):hover:visited .heimu{
     color: #00D7A8;
 }
 
