@@ -2,6 +2,7 @@
   gadgets:
       - popups
       - MarkRights
+      - colorLinks
 
 - section: Admin
   gadgets:
