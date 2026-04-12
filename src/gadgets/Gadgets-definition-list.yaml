@@ -4,6 +4,10 @@
       - MarkRights
       - colorLinks
 
+- section: Edit
+  gadgets:
+      - Wikiplus
+
 - section: Admin
   gadgets:
       - CleanDeleteReasons
