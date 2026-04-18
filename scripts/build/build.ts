@@ -26,6 +26,17 @@ const transpileCss: FileProcessor = async file => {
     return code;
 };
 
+const wrapCode = (code: Uint8Array | string): Uint8Array => {
+    const encoder = new TextEncoder();
+
+    const prefix = encoder.encode('/* <nowiki> */\n\n'),
+        suffix = encoder.encode('\n\n/* </nowiki> */');
+
+    const body = typeof code === 'string' ? encoder.encode(code) : code;
+
+    return new Uint8Array([...prefix, ...body, ...suffix]);
+};
+
 const processFiles = async (
     pattern: string,
     subDir: string,
@@ -40,7 +51,7 @@ const processFiles = async (
             .map(async file => {
                 const relPath = relative(resolve(SRC_DIR, subDir), file);
                 const outFile = resolve(DIST_DIR, subDir, relPath);
-                const code = await processor(file);
+                const code = wrapCode(await processor(file));
                 await mkdir(dirname(outFile), { recursive: true });
                 await writeFile(outFile, code);
             }),
