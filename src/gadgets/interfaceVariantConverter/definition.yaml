@@ -1,0 +1,40 @@
+ResourceLoader: true
+
+hidden: false
+
+default: false
+
+supportsUrlLoad: false
+
+skins: []
+
+actions:
+    - view
+
+categories: []
+
+namespaces:
+    - 8
+
+contentModels:
+    - wikitext
+
+type: general
+
+package: false
+
+rights:
+    - edit
+    - editinterface
+
+peers: []
+
+dependencies:
+    - mediawiki.api
+    - oojs-ui
+    - ext.gadget.libCachedCode
+
+enable: true
+
+files:
+    - Gadget-interfaceVariantConverter.js

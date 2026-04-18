@@ -1,29 +1,29 @@
-a.extiw:not([href*="elaina.miraheze.org"]),
-a.extiw:not([href*="elaina.miraheze.org"]):visited,
-body.heimu_toggle_on span.heimu a.extiw:not([href*="elaina.miraheze.org"]),
-body.heimu_toggle_on a.extiw:not([href*="elaina.miraheze.org"]) span.heimu{
-    color: #00AF89;
+a.extiw:not([href*='elaina.miraheze.org']),
+a.extiw:not([href*='elaina.miraheze.org']):visited,
+body.heimu_toggle_on span.heimu a.extiw:not([href*='elaina.miraheze.org']),
+body.heimu_toggle_on a.extiw:not([href*='elaina.miraheze.org']) span.heimu {
+    color: #00af89;
 }
 
-.heimu:hover a.extiw:not([href*="elaina.miraheze.org"]),
-.heimu:hover a.extiw:not([href*="elaina.miraheze.org"]):visited,
-a.extiw:not([href*="elaina.miraheze.org"]):hover .heimu,
-a.extiw:not([href*="elaina.miraheze.org"]):hover:visited .heimu{
-    color: #00D7A8;
+.heimu:hover a.extiw:not([href*='elaina.miraheze.org']),
+.heimu:hover a.extiw:not([href*='elaina.miraheze.org']):visited,
+a.extiw:not([href*='elaina.miraheze.org']):hover .heimu,
+a.extiw:not([href*='elaina.miraheze.org']):hover:visited .heimu {
+    color: #00d7a8;
 }
 
 a.mw-disambig,
 body.heimu_toggle_on .heimu a.mw-disambig,
 body.heimu_toggle_on a.mw-disambig .heimu,
 .heimu:hover a.mw-disambig,
-a.mw-disambig:hover .heimu{
-    color: #EF8850;
+a.mw-disambig:hover .heimu {
+    color: #ef8850;
 }
 
 a.mw-disambig:visited,
 body.heimu_toggle_on .heimu a.mw-disambig:visited,
 body.heimu_toggle_on a.mw-disambig:visited .heimu,
 .heimu:hover a.mw-disambig:visited,
-a.mw-disambig:visited:hover .heimu{
-    color: #D27138;
+a.mw-disambig:visited:hover .heimu {
+    color: #d27138;
 }

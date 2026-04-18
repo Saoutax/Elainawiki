@@ -50,6 +50,8 @@ export default defineConfig([
                 $: 'readonly',
                 mw: 'readonly',
                 OO: 'readonly',
+                wgULS: 'readonly',
+                libCachedCode: 'readonly',
             },
         },
     },

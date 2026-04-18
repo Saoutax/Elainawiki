@@ -13,7 +13,10 @@
   gadgets:
       - CleanDeleteReasons
       - QuickUndo
+      - interfaceVariantConverter
 
 - section: Site
   gadgets:
       - SiteTemplate
+      - libCachedCode
+      - LocalObjectStorage

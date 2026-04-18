@@ -1,0 +1,33 @@
+ResourceLoader: true
+
+hidden: true
+
+default: false
+
+supportsUrlLoad: false
+
+skins: []
+
+actions: []
+
+categories: []
+
+namespaces: []
+
+contentModels: []
+
+type: general
+
+package: false
+
+rights: []
+
+peers: []
+
+dependencies:
+    - moment
+
+enable: true
+
+files:
+    - Gadget-LocalObjectStorage.js
