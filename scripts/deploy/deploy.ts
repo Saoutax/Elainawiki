@@ -2,7 +2,7 @@ import { Mwn } from 'mwn';
 import { contentHash, needDeploy } from './utils';
 import 'dotenv/config';
 
-const deploy = async () => {
+const deploy = async (message: string, id: string, author: string) => {
     const bot = await Mwn.init({
         apiUrl: 'https://elaina.miraheze.org/w/api.php',
         userAgent: `${process.env['USERAGENT']} (Github Actions; Saoutax-bot)`,
@@ -22,15 +22,17 @@ const deploy = async () => {
     const oldDeploy = await oldDeploymentJson(),
         currentDeploy = await contentHash(),
         deployment = needDeploy(oldDeploy, currentDeploy);
+
+    const summary = `Git commit${message ? `: [[git:commit/${id}|${message}]], authored by ${author}` : ''}`;
     await bot.batchOperation(Object.entries(deployment), async ([title, content]) =>
-        bot.save(title, content, 'Git commit', { bot: true, tags: 'Bot' }),
+        bot.save(title, content, summary, { bot: true, tags: 'Bot' }),
     );
     await bot.save(
         'MediaWiki:Deployment.json',
         JSON.stringify(
             Object.fromEntries(Object.entries(currentDeploy).map(([key, { hash }]) => [key, hash])),
         ),
-        'Update deployment status',
+        `[[git:commit/${id}|Update deployment status]]`,
         {
             bot: true,
             tags: 'Bot',
