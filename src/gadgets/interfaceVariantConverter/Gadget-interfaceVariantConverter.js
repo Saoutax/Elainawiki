@@ -12,7 +12,11 @@
 // };
 $(() =>
     (async () => {
-        const { wgPageName, wgUserName, wgArticleId } = mw.config.get('wgPageName');
+        const { wgPageName, wgUserName, wgArticleId } = mw.config.get(
+            'wgPageName',
+            'wgUserName',
+            'wgArticleId',
+        );
 
         const basepage = wgPageName.replace(/\/.*?$/, '');
         const api = new mw.Api();

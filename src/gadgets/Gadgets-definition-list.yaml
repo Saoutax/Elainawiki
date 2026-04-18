@@ -19,5 +19,6 @@
   gadgets:
       - SiteTemplate
       - LocalObjectStorage
+      - site-lib
       - libCachedCode
       - libPolyfill
