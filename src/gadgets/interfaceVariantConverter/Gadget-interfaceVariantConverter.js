@@ -1,191 +1,172 @@
 // WARNING: This script would break if source wikitext contains <pre> tags, won't fix.
-// <pre>
-'use strict';
-// TODO: Fix MultilineTextInput initial height
-// Test: https://zh.moegirl.org.cn/index.php?oldid=5572397
-// declare var lrAivc: {
-//     [key: string]: any;
-// };
-// declare var OpenCC: any;
-// declare var InPageEdit: {
-//     [key: string]: any;
-// };
 $(() =>
     (async () => {
-        const { wgPageName, wgUserName, wgArticleId } = mw.config.get(
+        const { wgPageName, wgUserName, wgArticleId } = mw.config.get([
             'wgPageName',
             'wgUserName',
             'wgArticleId',
-        );
+        ]);
 
         const basepage = wgPageName.replace(/\/.*?$/, '');
         const api = new mw.Api();
 
-        const lrAivc = $.extend(
-            {
-                main: ['zh-cn', 'zh-tw', 'zh-hk'],
-                dependent: {
-                    '(main)': 'zh-cn',
-                    'zh-hans': 'zh-cn',
-                    'zh-hant': 'zh-tw',
-                },
-                noteTA: {
-                    G1: 'MediaWiki',
-                },
-                autoPopulate: true,
-                useOpenCC: true,
-                manualAction: {
-                    'zh-hk': t => t.replaceAll('户', '戶'),
-                    'zh-tw': t => t.replaceAll('名稱空間', '命名空間').replaceAll('記憶體', '內存'),
-                },
-                watchlist: 'nochange',
+        const lrAivc = {
+            main: ['zh-cn', 'zh-tw', 'zh-hk'],
+            dependent: {
+                '(main)': 'zh-cn',
+                'zh-hans': 'zh-cn',
+                'zh-hant': 'zh-tw',
             },
-            window.lr_aivc,
-        );
+            noteTA: { G1: 'MediaWiki' },
+            autoPopulate: true,
+            useOpenCC: true,
+            manualAction: {
+                'zh-hk': t => t.replaceAll('户', '戶'),
+                'zh-tw': t => t.replaceAll('名稱空間', '命名空間').replaceAll('記憶體', '內存'),
+            },
+            watchlist: 'nochange',
+            ...window.lr_aivc,
+        };
 
         let prepopContent = '';
-        /* eslint-disable */
-        try {
-            prepopContent = lrAivc.autoPopulate
-                ? (
-                      await api.get({
-                          action: 'parse',
-                          assertuser: wgUserName,
-                          pageid: wgArticleId,
-                          prop: 'wikitext',
-                      })
-                  ).parse.wikitext['*']
-                : '';
-        } catch {}
-        /* eslint-enable */
+        if (lrAivc.autoPopulate) {
+            try {
+                const result = await api.get({
+                    action: 'parse',
+                    assertuser: wgUserName,
+                    pageid: wgArticleId,
+                    prop: 'wikitext',
+                });
+                prepopContent = result.parse.wikitext['*'];
+            } catch {
+                /* silent */
+            }
+        }
+
         const toParams = obj =>
             Object.entries(obj)
                 .map(([k, v]) => `${k}=${v}`)
                 .join('|');
-        const variantPage = variant =>
-            variant === '(main)' ? `${basepage}` : `${basepage}/${variant}`;
+
+        const variantPage = variant => (variant === '(main)' ? basepage : `${basepage}/${variant}`);
 
         const REGEXP = {
-            // [\s\S] works with new lines (avoids using dotall flag)
             lcMarker: /-{([\s\S]*?)}-/g,
             lcMarkerEsc: /-\\{([\s\S]*?)}\\-/g,
             nowiki: /<nowiki>([\s\S]*?)<\/nowiki>/g,
             link: /\[\[([\s\S]*?)(?:#([\s\S]*?))?(\|[\s\S]*?)?\]\]/g,
             extLink: /([^[])\[([^[]+?)( [\s\S]+?)?\]([^\]])/g,
-            // extLink: /(?<!\[)\[([^[]+?)( [\s\S]+?)?\](?!\])/g,
             template: /\{\{([\s\S]*?)\}\}/g,
             htmlEntity: /&([a-zA-Z0-9#]+);/g,
             noOCC: /<!--noOCC-->([\s\S]*?)<!--\/noOCC-->/gi,
         };
+
         const escapeWikitext = original => {
-            const nowikis = [],
-                mappings = [];
-            let replaced = original;
-            // Preserve all LC markers (including those within nowiki)
-            replaced = replaced.replace(REGEXP.lcMarker, (_, content) => `-\\{${content}}\\-`);
-            // Temporarily strip nowiki
-            replaced = replaced.replace(
-                REGEXP.nowiki,
-                (_, content) => `<nowiki>${nowikis.push(content) - 1}</nowiki>`,
-            );
-            // Replace link targets and anchors with IDs
-            replaced = replaced.replace(REGEXP.link, (match, target, anchor, text) =>
+            const nowikis = [];
+            const mappings = [];
+            const push = val => mappings.push(val) - 1;
+
+            let t = original;
+
+            // Preserve LC markers (including those within nowiki)
+            t = t.replace(REGEXP.lcMarker, (_, c) => `-\\{${c}}\\-`);
+
+            // Strip nowiki temporarily
+            t = t.replace(REGEXP.nowiki, (_, c) => `<nowiki>${nowikis.push(c) - 1}</nowiki>`);
+
+            // Replace link targets / anchors with IDs
+            t = t.replace(REGEXP.link, (match, target, anchor, text) =>
                 anchor || text
-                    ? `[[${text ? mappings.push(target) - 1 : target}${anchor ? `#${mappings.push(anchor) - 1}` : ''}${text || ''}]]`
+                    ? `[[${text ? push(target) : target}${anchor ? `#${push(anchor)}` : ''}${text ?? ''}]]`
                     : match,
             );
+
             // Replace external link targets with IDs
-            replaced = replaced.replace(
+            t = t.replace(
                 REGEXP.extLink,
                 (_, before, target, text, after) =>
-                    `${before}[${mappings.push(target) - 1}${text || ''}]${after}`,
+                    `${before}[${push(target)}${text ?? ''}]${after}`,
             );
-            // replaced = replaced.replace(REGEXP.extLink, (_, target, text) => `[${mappings.push(target) - 1}${text || ""}]`);
-            // Replace template names and parameters with IDs
-            replaced = replaced.replace(REGEXP.template, (_, params) => {
-                const paramList = params.split('|');
-                mappings.push(paramList[0]);
-                paramList.shift();
-                return `${paramList.reduce(
+
+            // Replace template names and named-parameter keys with IDs
+            t = t.replace(REGEXP.template, (_, params) => {
+                const [name, ...parts] = params.split('|');
+                push(name);
+                const restored = parts.reduce(
                     (acc, param) => {
-                        const [first, ...rest] = param.split('=');
-                        // If rest is not empty, it's a named parameter; otherwise, it's a positional parameter
-                        return rest.length
-                            ? `${acc}|${mappings.push(first) - 1}=${rest.join('=')}`
-                            : `${acc}|${param}`;
+                        const eqIdx = param.indexOf('=');
+                        return eqIdx === -1
+                            ? `${acc}|${param}`
+                            : `${acc}|${push(param.slice(0, eqIdx))}=${param.slice(eqIdx + 1)}`;
                     },
                     `{{${mappings.length - 1}`,
-                )}}}`;
+                );
+                return `${restored}}}`;
             });
+
             // Replace LC markers with IDs
-            replaced = replaced.replace(
-                REGEXP.lcMarkerEsc,
-                (_, content) => `-\\{${mappings.push(content || '') - 1}}\\-`,
-            );
+            t = t.replace(REGEXP.lcMarkerEsc, (_, c) => `-\\{${push(c ?? '')}}\\-`);
+
             // Replace HTML entities with IDs
-            replaced = replaced.replace(
-                REGEXP.htmlEntity,
-                (_, entity) => `&${mappings.push(entity) - 1};`,
-            );
+            t = t.replace(REGEXP.htmlEntity, (_, e) => `&${push(e)};`);
+
             // Restore nowiki
-            replaced = replaced.replace(
+            t = t.replace(
                 REGEXP.nowiki,
-                (_, index) => `<nowiki><nowiki>${nowikis[index]}</nowiki></nowiki>`,
+                (_, i) => `<nowiki><nowiki>${nowikis[i]}</nowiki></nowiki>`,
             );
-            return { replaced, mappings };
+
+            return { replaced: t, mappings };
         };
+
         const restoreWikitext = (original, mappings) => {
             const nowikis = [];
-            let replaced = original;
-            // Temporarily strip nowiki
-            replaced = replaced.replace(
-                REGEXP.nowiki,
-                (_, content) => `<nowiki>${nowikis.push(content) - 1}</nowiki>`,
-            );
+            let t = original;
+
+            // Strip nowiki temporarily
+            t = t.replace(REGEXP.nowiki, (_, c) => `<nowiki>${nowikis.push(c) - 1}</nowiki>`);
+
             // Restore HTML entities
-            replaced = replaced.replace(REGEXP.htmlEntity, (_, index) => `&${mappings[index]};`);
-            // Restore template names and parameters
-            replaced = replaced.replace(REGEXP.template, (_, params) => {
-                const paramList = params.split('|');
-                const name = mappings[paramList[0]];
-                paramList.shift();
-                return `${paramList.reduce((acc, param) => {
-                    const [first, ...rest] = param.split('=');
-                    // If rest is not empty, it's a named parameter; otherwise, it's a positional parameter
-                    return rest.length
-                        ? `${acc}|${mappings[first]}=${rest.join('=')}`
-                        : `${acc}|${param}`;
-                }, `{{${name}`)}}}`;
+            t = t.replace(REGEXP.htmlEntity, (_, i) => `&${mappings[i]};`);
+
+            // Restore template names and named-parameter keys
+            t = t.replace(REGEXP.template, (_, params) => {
+                const [nameIdx, ...parts] = params.split('|');
+                const restored = parts.reduce((acc, param) => {
+                    const eqIdx = param.indexOf('=');
+                    return eqIdx === -1
+                        ? `${acc}|${param}`
+                        : `${acc}|${mappings[param.slice(0, eqIdx)]}=${param.slice(eqIdx + 1)}`;
+                }, `{{${mappings[nameIdx]}`);
+                return `${restored}}}`;
             });
+
             // Restore external link targets
-            replaced = replaced.replace(
+            t = t.replace(
                 REGEXP.extLink,
                 (_, before, target, text, after) =>
-                    `${before}[${mappings[target]}${text || ''}]${after}`,
+                    `${before}[${mappings[target]}${text ?? ''}]${after}`,
             );
-            // replaced = replaced.replace(REGEXP.extLink, (_, target, text) => `[${mappings[target]}${text || ""}]`);
+
             // Restore link targets
-            replaced = replaced.replace(REGEXP.link, (match, target, anchor, text) =>
+            t = t.replace(REGEXP.link, (match, target, anchor, text) =>
                 anchor || text
-                    ? `[[${text ? mappings[target] : target}${mappings[anchor] ? `#${mappings[anchor]}` : ''}${text || ''}]]`
+                    ? `[[${text ? mappings[target] : target}${mappings[anchor] ? `#${mappings[anchor]}` : ''}${text ?? ''}]]`
                     : match,
             );
+
             // Restore nowiki
-            replaced = replaced.replace(
-                REGEXP.nowiki,
-                (_, index) => `<nowiki>${nowikis[index]}</nowiki>`,
-            );
-            // Restore all LC markers (including those within nowiki)
-            replaced = replaced.replace(
-                REGEXP.lcMarkerEsc,
-                (_, index) => `-{${mappings[index] ?? index}}-`,
-            );
-            return replaced;
+            t = t.replace(REGEXP.nowiki, (_, i) => `<nowiki>${nowikis[i]}</nowiki>`);
+
+            // Restore LC markers
+            t = t.replace(REGEXP.lcMarkerEsc, (_, i) => `-{${mappings[i] ?? i}}-`);
+
+            return t;
         };
 
         class AIVCWindow extends OO.ui.ProcessDialog {
             static static = {
-                ...super.static,
+                ...OO.ui.ProcessDialog.static,
                 tagName: 'div',
                 name: 'lr-aivc',
                 title: wgULS('自动繁简转换工具', '自動繁簡轉換工具'),
@@ -216,77 +197,44 @@ $(() =>
                     },
                 ],
             };
-            constructor(config) {
-                // Parent constructor
-                super(config);
 
-                this.config = config.data.config;
-                this.prepopContent = config.data.prepopContent;
+            constructor({ data, ...config }) {
+                super({ data, ...config });
+                this.config = data.config;
+                this.prepopContent = data.prepopContent;
             }
+
             initialize() {
-                // Parent method
                 super.initialize();
 
-                this.configPanel = new OO.ui.PanelLayout({
-                    scrollable: false,
-                    expanded: false,
-                    padded: true,
-                });
-                this.confirmPanel = new OO.ui.PanelLayout({
-                    scrollable: false,
-                    expanded: false,
-                    padded: true,
-                });
+                this.configPanel = this.#makePanel();
+                this.confirmPanel = this.#makePanel();
 
                 this.ogText = new OO.ui.MultilineTextInputWidget({
                     value: this.prepopContent,
                     autosize: true,
                 });
-                const textField = new OO.ui.FieldLayout(this.ogText, {
-                    label: wgULS('原始内容', '原始內容'),
-                    align: 'top',
-                });
-
                 this.mainVariants = new OO.ui.TextInputWidget({
                     value: this.config.main.join(';'),
                 });
-                const mainField = new OO.ui.FieldLayout(this.mainVariants, {
-                    label: wgULS('主要变体', '主要變体'),
-                    align: 'top',
-                });
-
                 this.depVariants = new OO.ui.TextInputWidget({
                     value: Object.entries(this.config.dependent)
                         .map(([k, v]) => `${k}:${v}`)
                         .join(';'),
                 });
-                const depField = new OO.ui.FieldLayout(this.depVariants, {
-                    label: wgULS('依赖变体', '依賴變体'),
-                    align: 'top',
-                });
-
                 this.noteTAParams = new OO.ui.TextInputWidget({
                     value: toParams(this.config.noteTA),
                 });
-                const noteTAField = new OO.ui.FieldLayout(this.noteTAParams, {
-                    label: wgULS('NoteTA参数', 'NoteTA參數'),
-                    align: 'top',
-                });
-
                 this.occCheckbox = new OO.ui.CheckboxInputWidget({
                     selected: this.config.useOpenCC,
                 });
-                const occField = new OO.ui.FieldLayout(this.occCheckbox, {
-                    label: '使用OpenCC',
-                    align: 'inline',
-                });
 
                 this.configPanel.$element.append(
-                    textField.$element,
-                    mainField.$element,
-                    depField.$element,
-                    noteTAField.$element,
-                    occField.$element,
+                    this.#field(this.ogText, wgULS('原始内容', '原始內容'), 'top'),
+                    this.#field(this.mainVariants, wgULS('主要变体', '主要變体'), 'top'),
+                    this.#field(this.depVariants, wgULS('依赖变体', '依賴變体'), 'top'),
+                    this.#field(this.noteTAParams, wgULS('NoteTA参数', 'NoteTA參數'), 'top'),
+                    this.#field(this.occCheckbox, '使用OpenCC', 'inline'),
                 );
 
                 this.stackLayout = new OO.ui.StackLayout({
@@ -294,255 +242,268 @@ $(() =>
                 });
 
                 this.ogText.connect(this, { resize: 'updateSize' });
-
                 this.$body.append(this.stackLayout.$element);
             }
+
+            #makePanel() {
+                return new OO.ui.PanelLayout({ scrollable: false, expanded: false, padded: true });
+            }
+
+            #field(widget, label, align) {
+                return new OO.ui.FieldLayout(widget, { label, align }).$element;
+            }
+
+            #switchTo(mode, panel) {
+                this.actions.setMode(mode);
+                this.stackLayout.setItem(panel);
+                this.updateSize();
+            }
+
             getBodyHeight() {
                 return this.stackLayout.getCurrentItem().$element.outerHeight(true);
             }
+
             getSetupProcess(data) {
                 return super.getSetupProcess(data).next(() => {
-                    this.actions.setMode('config');
-                    this.stackLayout.setItem(this.configPanel);
+                    this.#switchTo('config', this.configPanel);
                 }, this);
             }
+
             getReadyProcess(data) {
                 return super.getReadyProcess(data).next(() => {
                     this.ogText.focus();
                 }, this);
             }
+
             getActionProcess(action) {
-                if (action === 'cancel') {
-                    return new OO.ui.Process(() => {
-                        this.close({ action: action });
-                    }, this);
-                } else if (action === 'continue') {
-                    return new OO.ui.Process(
-                        $.when(
-                            (async () => {
-                                this.config = $.extend(this.config, {
-                                    main: this.mainVariants.getValue().split(';'),
-                                    dependent: Object.fromEntries(
-                                        this.depVariants
-                                            .getValue()
-                                            .split(';')
-                                            .map(v => v.split(':')),
-                                    ),
-                                    noteTAStr: this.noteTAParams.getValue(),
-                                    useOpenCC: this.occCheckbox.isSelected(),
-                                    dependentInv: {},
-                                });
-                                if (this.config.main.includes('(main)')) {
-                                    throw new OO.ui.Error(
-                                        wgULS('主页面不得作为主要变体', '主頁面不得作為主要變体'),
-                                    );
-                                }
-                                this.config.main.forEach(v => (this.config.dependentInv[v] = [v]));
-                                try {
-                                    Object.entries(this.config.dependent).forEach(([k, v]) =>
-                                        this.config.dependentInv[v /* as string */].push(k),
-                                    );
-                                } catch {
-                                    console.error(
-                                        '[VariantConverter] Error: Key not found in dependentInv. Config dump:',
-                                        this.config,
-                                    );
-                                    throw new OO.ui.Error(
-                                        wgULS(
-                                            '依赖变体格式错误，请检查控制台',
-                                            '依賴變体格式錯誤，請檢查控制臺',
-                                        ),
-                                    );
-                                }
-                                this.textInputs = {};
-                                this.confirmPanel.$element.empty();
-                                try {
-                                    await this.getVariants(this.ogText.getValue());
-                                    this.actions.setMode('confirm');
-                                    this.stackLayout.setItem(this.confirmPanel);
-                                    this.updateSize();
-                                } catch (e) {
-                                    console.error('[VariantConverter] Error:', e);
-                                    throw new OO.ui.Error(e);
-                                }
-                            })(),
-                        ).promise(),
-                        this,
+                const handlers = {
+                    cancel: () => this.close({ action }),
+
+                    continue: async () => {
+                        this.#applyConfigFromUI();
+
+                        if (this.config.main.includes('(main)')) {
+                            throw new OO.ui.Error(
+                                wgULS('主页面不得作为主要变体', '主頁面不得作為主要變体'),
+                            );
+                        }
+                        this.#buildDependentInv();
+
+                        this.textInputs = {};
+                        this.confirmPanel.$element.empty();
+                        await this.#getVariants(this.ogText.getValue());
+                        this.#switchTo('confirm', this.confirmPanel);
+                    },
+
+                    back: () => {
+                        this.#switchTo('config', this.configPanel);
+                    },
+
+                    submit: async () => {
+                        await this.#saveChanges();
+                        this.close({ action });
+                        mw.notify('保存成功！', {
+                            title: wgULS('自动繁简转换工具', '自動繁簡轉換工具'),
+                            type: 'success',
+                            tag: 'lr-aivc',
+                        });
+                        setTimeout(() => location.reload(), 730);
+                    },
+                };
+
+                const handler = handlers[action];
+                if (!handler) {
+                    return super.getActionProcess(action);
+                }
+
+                return new OO.ui.Process(
+                    (async () => {
+                        try {
+                            await handler();
+                        } catch (e) {
+                            if (e instanceof OO.ui.Error) {
+                                throw e;
+                            }
+                            console.error('[VariantConverter] Error:', e);
+                            throw new OO.ui.Error(String(e));
+                        }
+                    })(),
+                    this,
+                );
+            }
+
+            #applyConfigFromUI() {
+                Object.assign(this.config, {
+                    main: this.mainVariants.getValue().split(';'),
+                    dependent: Object.fromEntries(
+                        this.depVariants
+                            .getValue()
+                            .split(';')
+                            .map(v => v.split(':')),
+                    ),
+                    noteTAStr: this.noteTAParams.getValue(),
+                    useOpenCC: this.occCheckbox.isSelected(),
+                    dependentInv: {},
+                });
+            }
+
+            #buildDependentInv() {
+                for (const v of this.config.main) {
+                    this.config.dependentInv[v] = [v];
+                }
+                try {
+                    for (const [k, v] of Object.entries(this.config.dependent)) {
+                        this.config.dependentInv[v].push(k);
+                    }
+                } catch {
+                    console.error(
+                        '[VariantConverter] Error: Key not found in dependentInv. Config dump:',
+                        this.config,
                     );
-                } else if (action === 'back') {
-                    this.actions.setMode('config');
-                    this.stackLayout.setItem(this.configPanel);
-                    this.updateSize();
-                } else if (action === 'submit') {
-                    return new OO.ui.Process(
-                        $.when(
-                            (async () => {
-                                try {
-                                    await this.saveChanges();
-                                    this.close({ action: action });
-                                    mw.notify('保存成功！', {
-                                        title: wgULS('自动繁简转换工具', '自動繁簡轉換工具'),
-                                        type: 'success',
-                                        tag: 'lr-aivc',
-                                    });
-                                    setTimeout(() => location.reload(), 730);
-                                } catch (e) {
-                                    console.error('[VariantConverter] Error:', e);
-                                    throw new OO.ui.Error(e);
-                                }
-                            })(),
-                        ).promise(),
-                        this,
+                    throw new OO.ui.Error(
+                        wgULS('依赖变体格式错误，请检查控制台', '依賴變体格式錯誤，請檢查控制臺'),
                     );
                 }
-                // Fallback to parent handler
-                return super.getActionProcess(action);
             }
-            addVariant(variant, text) {
-                this.textInputs[variant] = new OO.ui.MultilineTextInputWidget({
-                    value: text,
-                    autosize: true,
-                });
-                const field = new OO.ui.FieldLayout(this.textInputs[variant], {
-                    label: variant,
-                    align: 'top',
-                });
-                this.textInputs[variant].connect(this, { resize: 'updateSize' });
-                this.confirmPanel.$element.append(field.$element);
+
+            #addVariant(variant, text) {
+                const input = new OO.ui.MultilineTextInputWidget({ value: text, autosize: true });
+                this.textInputs[variant] = input;
+                input.connect(this, { resize: 'updateSize' });
+                this.confirmPanel.$element.append(this.#field(input, variant, 'top'));
+
                 if (window?.InPageEdit?.quickDiff) {
+                    const buttons = this.config.dependentInv[variant].map(v =>
+                        new OO.ui.ButtonWidget({
+                            label: `${wgULS('对比', '對比')}${v === '(main)' ? wgULS('主页面', '主頁面') : v}`,
+                        }).on('click', () =>
+                            window.InPageEdit.quickDiff({
+                                fromtitle: variantPage(v),
+                                totext: input.getValue(),
+                                pageName: variantPage(v),
+                                isPreview: true,
+                            }),
+                        ),
+                    );
                     this.confirmPanel.$element.append(
                         new OO.ui.FieldLayout(
                             new OO.ui.Widget({
-                                content: [
-                                    new OO.ui.HorizontalLayout({
-                                        items: this.config.dependentInv[variant].map(v =>
-                                            new OO.ui.ButtonWidget({
-                                                label: `${wgULS('对比', '對比')}${v === '(main)' ? wgULS('主页面', '主頁面') : v}`,
-                                            }).on('click', () =>
-                                                window.InPageEdit.quickDiff({
-                                                    fromtitle: variantPage(v),
-                                                    totext: this.textInputs[variant].getValue(),
-                                                    pageName: variantPage(v),
-                                                    isPreview: true,
-                                                }),
-                                            ),
-                                        ),
-                                    }),
-                                ],
+                                content: [new OO.ui.HorizontalLayout({ items: buttons })],
                             }),
                         ).$element,
                     );
                 }
             }
-            async getVariants(original) {
+
+            async #getVariants(original) {
                 this.confirmPanel.$element.append(
                     `<p>${wgULS('请确认以下转换是否正确', '請確認以下轉換是否正確')}：</p>`,
                 );
 
-                if (!window.OpenCC && this.config.useOpenCC) {
-                    // Load in order to prevent reference error
+                if (this.config.useOpenCC && !window.OpenCC) {
                     await libCachedCode.injectCachedCode(
                         'https://fastly.jsdelivr.net/npm/opencc-js@latest',
                         'script',
                     );
-                    /* global OpenCC */
                 }
 
                 const { replaced, mappings } = escapeWikitext(original);
 
-                for (const variant of this.config.main) {
-                    if (variant === '(main)') {
-                        continue;
-                    }
-                    const text = `{{NoteTA|${this.config.noteTAStr}}}<pre id="converted">-{}-${replaced}</pre>`;
-                    const parsed = $(
-                        $.parseHTML(
-                            (
-                                await api.post({
-                                    action: 'parse',
-                                    assertuser: wgUserName,
-                                    text,
-                                    contentmodel: 'wikitext',
-                                    prop: 'text',
-                                    uselang: variant,
-                                    disablelimitreport: true,
-                                    pst: true,
-                                })
-                            ).parse.text['*'],
-                        ),
-                    );
-                    let converted = parsed.find('#converted').text();
-                    if (this.config.useOpenCC) {
-                        const occMappings = [];
-                        converted = converted.replace(
-                            REGEXP.noOCC,
-                            (_, content) =>
-                                `<!--noOCC-->${occMappings.push(content) - 1}<!--/noOCC-->`,
-                        );
+                await Promise.all(
+                    this.config.main
+                        .filter(v => v !== '(main)')
+                        .map(async variant => {
+                            const wikitext = `{{NoteTA|${this.config.noteTAStr}}}<pre id="converted">-{}-${replaced}</pre>`;
+                            const result = await api.post({
+                                action: 'parse',
+                                assertuser: wgUserName,
+                                text: wikitext,
+                                contentmodel: 'wikitext',
+                                prop: 'text',
+                                uselang: variant,
+                                disablelimitreport: true,
+                                pst: true,
+                            });
 
-                        const occVariant = variant
-                            .replace('hans', 'cn')
-                            .replace(/zh-(?:han)?/, '')
-                            .replace('tw', 'twp');
-                        const converter = OpenCC.Converter({ from: occVariant, to: occVariant });
-                        converted = converter(converted);
+                            const parsed = $($.parseHTML(result.parse.text['*']));
+                            let converted = parsed.find('#converted').text();
 
-                        converted = converted.replace(
-                            REGEXP.noOCC,
-                            (_, index) => `<!--noOCC-->${occMappings[index]}<!--/noOCC-->`,
-                        );
-                    }
-                    const final = this.config.manualAction[variant]?.(converted) || converted;
-                    const restored = restoreWikitext(final, mappings);
-                    this.addVariant(variant, restored);
-                }
+                            if (this.config.useOpenCC) {
+                                converted = this.#applyOpenCC(converted, variant);
+                            }
+
+                            const final =
+                                this.config.manualAction[variant]?.(converted) ?? converted;
+                            this.#addVariant(variant, restoreWikitext(final, mappings));
+                        }),
+                );
             }
-            async saveChanges() {
-                // Occasionally edits are not saved - keep this log until the bug is identified
-                console.log(
-                    '[VariantConverter] Saved changes',
-                    await Promise.allSettled(
-                        this.config.main
-                            .map(variant => {
-                                const text = this.textInputs[variant].getValue();
-                                return api.postWithToken('csrf', {
-                                    action: 'edit',
-                                    assertuser: wgUserName,
-                                    title: variantPage(variant),
-                                    text,
-                                    summary: `自动转换自[[${wgPageName}]]`,
-                                    tags: 'VariantConverter|Automation tool',
-                                    watchlist: this.config.watchlist,
-                                });
-                            })
-                            .concat(
-                                Object.entries(this.config.dependent).map(([variant, parent]) => {
-                                    const text = this.textInputs[parent /* as string */].getValue();
-                                    return api.postWithToken('csrf', {
-                                        action: 'edit',
-                                        assertuser: wgUserName,
-                                        title: variantPage(variant),
-                                        text,
-                                        summary: `自动转换自[[${wgPageName}]]（同步${parent}）`,
-                                        tags: 'VariantConverter|Automation tool',
-                                        watchlist: this.config.watchlist,
-                                    });
-                                }),
-                            ),
+
+            #applyOpenCC(text, variant) {
+                const occMappings = [];
+                let t = text.replace(
+                    REGEXP.noOCC,
+                    (_, c) => `<!--noOCC-->${occMappings.push(c) - 1}<!--/noOCC-->`,
+                );
+
+                const occVariant = variant
+                    .replace('hans', 'cn')
+                    .replace(/zh-(?:han)?/, '')
+                    .replace('tw', 'twp');
+
+                // eslint-disable-next-line no-undef
+                t = OpenCC.Converter({ from: occVariant, to: occVariant })(t);
+
+                return t.replace(
+                    REGEXP.noOCC,
+                    (_, i) => `<!--noOCC-->${occMappings[i]}<!--/noOCC-->`,
+                );
+            }
+
+            async #saveChanges() {
+                const editParams = (title, text, summary) => ({
+                    action: 'edit',
+                    assertuser: wgUserName,
+                    title,
+                    text,
+                    summary,
+                    tags: 'VariantConverter|Automation tool',
+                    watchlist: this.config.watchlist,
+                });
+
+                const mainEdits = this.config.main.map(variant =>
+                    api.postWithToken(
+                        'csrf',
+                        editParams(
+                            variantPage(variant),
+                            this.textInputs[variant].getValue(),
+                            `自动转换自[[${wgPageName}]]`,
+                        ),
                     ),
                 );
+
+                const depEdits = Object.entries(this.config.dependent).map(([variant, parent]) =>
+                    api.postWithToken(
+                        'csrf',
+                        editParams(
+                            variantPage(variant),
+                            this.textInputs[parent].getValue(),
+                            `自动转换自[[${wgPageName}]]（同步${parent}）`,
+                        ),
+                    ),
+                );
+
+                const results = await Promise.allSettled([...mainEdits, ...depEdits]);
+                console.log('[VariantConverter] Saved changes', results);
             }
         }
 
-        const $body = $(document.body);
         const windowManager = new OO.ui.WindowManager();
-        $body.append(windowManager.$element);
+        $(document.body).append(windowManager.$element);
+
         const aivcDialog = new AIVCWindow({
             size: 'large',
-            data: {
-                config: lrAivc,
-                prepopContent,
-            },
+            data: { config: lrAivc, prepopContent },
         });
         windowManager.addWindows([aivcDialog]);
 
@@ -556,9 +517,8 @@ $(() =>
             ),
         ).on('click', e => {
             e.preventDefault();
-            $('#mw-notification-area').appendTo($body);
+            $('#mw-notification-area').appendTo(document.body);
             windowManager.openWindow(aivcDialog);
         });
     })(),
 );
-// </pre>
