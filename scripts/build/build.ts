@@ -1,6 +1,6 @@
 import { transformFile } from '@swc/core';
 import { transform } from 'lightningcss';
-import { resolve, relative, dirname, basename, extname } from 'node:path';
+import { resolve, relative, dirname, basename } from 'node:path';
 import { rm, mkdir, writeFile, readFile } from 'node:fs/promises';
 import FastGlob from 'fast-glob';
 import { generateDefinition } from './definition';
@@ -59,9 +59,8 @@ const processFiles = async (
 };
 
 const isGadgetEntryFile = (file: string) => {
-    const relPath = relative(resolve(SRC_DIR, 'gadgets'), file);
-    const dir = basename(dirname(relPath));
-    return basename(relPath) === `Gadget-${dir}${extname(relPath)}`;
+    const name = basename(file);
+    return /^Gadget-.*\.(js|css)$/.test(name);
 };
 
 const build = async () => {
