@@ -438,7 +438,7 @@ $(() =>
                 if (!window.OpenCC && this.config.useOpenCC) {
                     // Load in order to prevent reference error
                     await libCachedCode.injectCachedCode(
-                        'https://npm.elemecdn.com/opencc-js@latest',
+                        'https://fastly.jsdelivr.net/npm/opencc-js@latest',
                         'script',
                     );
                     /* global OpenCC */
