@@ -1,0 +1,36 @@
+ResourceLoader: true
+
+hidden: false
+
+default: true
+
+supportsUrlLoad: false
+
+skins: []
+
+actions: []
+
+categories: []
+
+namespaces: []
+
+contentModels: []
+
+type: general
+
+package: false
+
+rights:
+    - rollback
+
+peers: []
+
+dependencies:
+    - ext.gadget.libOOUIDialog
+    - mediawiki.api
+    - ext.gadget.site-lib
+
+enable: true
+
+files:
+    - Gadget-rollback-summary.js

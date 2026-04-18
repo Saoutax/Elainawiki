@@ -51,6 +51,7 @@ export default defineConfig([
                 mw: 'readonly',
                 OO: 'readonly',
                 wgULS: 'readonly',
+                oouiDialog: 'readonly',
                 libCachedCode: 'readonly',
             },
         },

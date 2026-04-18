@@ -11,6 +11,7 @@
 
 - section: Admin
   gadgets:
+      - rollback-summary
       - CleanDeleteReasons
       - QuickUndo
       - interfaceVariantConverter
@@ -22,3 +23,4 @@
       - site-lib
       - libCachedCode
       - libPolyfill
+      - libOOUIDialog
