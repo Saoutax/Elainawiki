@@ -26,6 +26,7 @@ peers: []
 
 dependencies:
     - moment
+    - ext.gadget.libPolyfill
 
 enable: true
 
