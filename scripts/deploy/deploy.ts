@@ -23,7 +23,7 @@ const deploy = async (message: string, id: string, author: string) => {
         currentDeploy = await contentHash(),
         deployment = needDeploy(oldDeploy, currentDeploy);
 
-    const summary = `Git commit${message ? `: [[git:commit/${id}|${message}]], authored by ${author}` : ''}`;
+    const summary = `Git commit${message ? `: [[git:commit/${id}|${message}]] by ${author}` : ''}`;
     await bot.batchOperation(Object.entries(deployment), async ([title, content]) =>
         bot.save(title, content, summary, { bot: true, tags: 'Bot' }),
     );
