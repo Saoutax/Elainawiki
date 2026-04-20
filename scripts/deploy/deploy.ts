@@ -32,7 +32,7 @@ const deploy = async (message: string, id: string, author: string) => {
         JSON.stringify(
             Object.fromEntries(Object.entries(currentDeploy).map(([key, { hash }]) => [key, hash])),
         ),
-        message,
+        summary,
         {
             bot: true,
             tags: 'Bot',
