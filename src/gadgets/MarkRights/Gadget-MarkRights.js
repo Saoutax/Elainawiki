@@ -1,6 +1,6 @@
 (() => {
     const USER_GROUPS = {
-        bureaucrat: { label: '行', color: '#6610f2', name: '行政员' },
+        bureaucrat: { label: '政', color: '#6610f2', name: '行政员' },
         sysop: { label: '管', color: '#ec407a', name: '管理员' },
         'interface-admin': { label: '界', color: '#f55b42', name: '界面管理员' },
         bot: { label: '机', color: '#1e88e5', name: '机器人' },
