@@ -12,8 +12,8 @@
 - section: Admin
   gadgets:
       - rollback-summary
-      - CleanDeleteReasons
       - QuickUndo
+      - CleanDeleteReasons
       - interfaceVariantConverter
 
 - section: Site
