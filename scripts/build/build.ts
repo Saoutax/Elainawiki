@@ -7,15 +7,20 @@ import { generateDefinition } from './definition';
 
 const SRC_DIR = resolve('src');
 const DIST_DIR = resolve('dist');
+const banner = `/**
+ * -------------------------------------------------------------------------
+ * !!! DON'T MODIFY THIS PAGE MANUALLY, YOUR CHANGES WILL BE OVERWRITTEN !!!
+ * -------------------------------------------------------------------------
+ */`;
 
 type FileProcessor = (file: string) => Promise<Uint8Array | string>;
 
-const transpileJs: FileProcessor = async file => {
+const transpileJs: FileProcessor = async (file) => {
     const { code } = await transformFile(file);
     return code;
 };
 
-const transpileCss: FileProcessor = async file => {
+const transpileCss: FileProcessor = async (file) => {
     const source = await readFile(file);
     const { code } = transform({
         filename: file,
@@ -29,7 +34,7 @@ const transpileCss: FileProcessor = async file => {
 const wrapCode = (code: Uint8Array | string): Uint8Array => {
     const encoder = new TextEncoder();
 
-    const prefix = encoder.encode('/* <nowiki> */\n\n'),
+    const prefix = encoder.encode(`${banner}\n\n/* <nowiki> */\n\n`),
         suffix = encoder.encode('\n\n/* </nowiki> */');
 
     const body = typeof code === 'string' ? encoder.encode(code) : code;
@@ -47,8 +52,8 @@ const processFiles = async (
 
     await Promise.all(
         files
-            .filter(file => !filter || filter(file))
-            .map(async file => {
+            .filter((file) => !filter || filter(file))
+            .map(async (file) => {
                 const relPath = relative(resolve(SRC_DIR, subDir), file);
                 const outFile = resolve(DIST_DIR, subDir, relPath);
                 const code = wrapCode(await processor(file));
@@ -67,11 +72,24 @@ const build = async () => {
     await rm(DIST_DIR, { recursive: true, force: true });
     await mkdir(resolve(DIST_DIR, 'gadgets'), { recursive: true });
 
-    await writeFile(`${DIST_DIR}/gadgets/Gadgets-definition`, await generateDefinition());
+    await writeFile(
+        `${DIST_DIR}/gadgets/Gadgets-definition`,
+        await generateDefinition(),
+    );
 
     await Promise.all([
-        processFiles('gadgets/*/*.js', 'gadgets', transpileJs, isGadgetEntryFile),
-        processFiles('gadgets/*/*.css', 'gadgets', transpileCss, isGadgetEntryFile),
+        processFiles(
+            'gadgets/*/*.js',
+            'gadgets',
+            transpileJs,
+            isGadgetEntryFile,
+        ),
+        processFiles(
+            'gadgets/*/*.css',
+            'gadgets',
+            transpileCss,
+            isGadgetEntryFile,
+        ),
         processFiles('global/*.js', 'global', transpileJs),
         processFiles('global/*.css', 'global', transpileCss),
     ]);
