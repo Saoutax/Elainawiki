@@ -1,0 +1,4 @@
+.patroller-show,
+.sysop-show {
+    display: revert !important;
+}
