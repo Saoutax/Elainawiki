@@ -1,22 +1,21 @@
 {
-    "name": "bwikiinterface",
+    "name": "elainawiki",
     "version": "1.0.0",
     "description": "",
+    "keywords": [
+        "MediaWiki",
+        "MediaWiki Gadgets"
+    ],
+    "license": "MIT",
+    "author": "Saoutax",
+    "type": "module",
     "scripts": {
         "build": "tsx scripts/run.ts --mode=build",
         "deploy": "pnpm run build && tsx scripts/run.ts --mode=deploy",
         "format": "npx prettier --write .",
+        "fmt": "oxfmt",
         "lint:dev": "npx eslint scripts"
     },
-    "keywords": [
-        "MediaWiki",
-        "BWiki",
-        "MediaWiki Gadgets"
-    ],
-    "author": "Saoutax",
-    "license": "MIT",
-    "packageManager": "pnpm@10.32.1",
-    "type": "module",
     "dependencies": {
         "@swc/core": "^1.15.18",
         "crypto-js": "^4.2.0",
@@ -40,8 +39,9 @@
         "eslint": "^10.0.3",
         "eslint-config-prettier": "^10.1.8",
         "globals": "^17.4.0",
-        "prettier": "^3.8.1",
+        "oxfmt": "^0.46.0",
         "types-mediawiki": "^2.0.0",
         "typescript-eslint": "^8.57.1"
-    }
+    },
+    "packageManager": "pnpm@10.32.1"
 }

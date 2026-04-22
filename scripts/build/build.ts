@@ -1,8 +1,8 @@
-import { transformFile } from '@swc/core';
-import { transform } from 'lightningcss';
-import { resolve, relative, dirname, basename } from 'node:path';
 import { rm, mkdir, writeFile, readFile } from 'node:fs/promises';
+import { resolve, relative, dirname, basename } from 'node:path';
+import { transformFile } from '@swc/core';
 import FastGlob from 'fast-glob';
+import { transform } from 'lightningcss';
 import { generateDefinition } from './definition';
 
 const SRC_DIR = resolve('src');
