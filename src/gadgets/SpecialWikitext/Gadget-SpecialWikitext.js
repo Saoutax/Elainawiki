@@ -212,7 +212,7 @@
             } else {
                 return preferValues ? [preferValues] : [];
             }
-        }).includes(data);
+        })().includes(data);
     };
     const getLanguage = () => {
         const lang = wgUserLanguage;
