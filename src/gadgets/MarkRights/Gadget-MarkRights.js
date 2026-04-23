@@ -2,7 +2,13 @@
     const USER_GROUPS = {
         bureaucrat: { label: '政', color: '#6610f2', name: '行政员' },
         sysop: { label: '管', color: '#ec407a', name: '管理员' },
-        'interface-admin': { label: '界', color: '#f55b42', name: '界面管理员' },
+        'interface-admin': {
+            label: '界',
+            color: '#f55b42',
+            name: '界面管理员',
+        },
+        patoller: { label: '巡', color: '#f77f38', name: '巡查员' },
+        autoreviewer: { label: '免', color: '#1aa179', name: '巡查豁免者' },
         bot: { label: '机', color: '#1e88e5', name: '机器人' },
         flood: { label: '机', color: '#1e88e5', name: '机器用户' },
         confirmed: { label: '确', color: '#009688', name: '确认用户' },
