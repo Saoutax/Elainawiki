@@ -16,4 +16,11 @@ $(() => {
         $('input[name="botEdit"]').prop('checked', true); // 默认不于最近更改显示
         $('input[name="ns10"]').prop('checked', true); // 默认于主、模板命名空间替换
     }
+
+    // Special:MassEditRegex
+    if (wgCanonicalSpecialPageName === 'MassEditRegex') {
+        $('#wpPageList').val('');
+        $('#wpMatch').val('');
+        $('#wpReplace').val('');
+    }
 });
