@@ -14,7 +14,12 @@ categories: []
 
 namespaces: []
 
-contentModels: []
+contentModels:
+    - javascript
+    - sanitized-css
+    - css
+    - json
+    - Scribunto
 
 type: general
 
