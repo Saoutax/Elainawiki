@@ -18,6 +18,7 @@
 
 - section: Site
   gadgets:
+      - SiteStyles
       - SiteTemplate
       - SpecialWikitext
       - LocalObjectStorage
