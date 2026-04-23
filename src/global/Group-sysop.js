@@ -12,10 +12,7 @@ $(() => {
     }
 
     // Special:ReplaceText
-    if (
-        mw.config.get('wgCanonicalSpecialPageName') === 'ReplaceText' &&
-        $('#powersearch')[0]
-    ) {
+    if (wgCanonicalSpecialPageName === 'ReplaceText' && $('#powersearch')[0]) {
         $('input[name="botEdit"]').prop('checked', true); // 默认不于最近更改显示
         $('input[name="ns10"]').prop('checked', true); // 默认于主、模板命名空间替换
     }
