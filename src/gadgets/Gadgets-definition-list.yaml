@@ -19,6 +19,7 @@
 - section: Site
   gadgets:
       - SiteTemplate
+      - SpecialWikitext
       - LocalObjectStorage
       - site-lib
       - libCachedCode

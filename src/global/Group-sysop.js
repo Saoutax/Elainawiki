@@ -1,7 +1,5 @@
 $(() => {
-    const { wgCanonicalSpecialPageName } = mw.config.get([
-        'wgCanonicalSpecialPageName',
-    ]);
+    const { wgCanonicalSpecialPageName } = mw.config.get(['wgCanonicalSpecialPageName']);
 
     // 默认导入理由
     if (wgCanonicalSpecialPageName === 'Import') {

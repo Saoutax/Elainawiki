@@ -1,0 +1,35 @@
+ResourceLoader: true
+
+hidden: false
+
+default: true
+
+supportsUrlLoad: false
+
+skins: []
+
+actions: []
+
+categories: []
+
+namespaces: []
+
+contentModels: []
+
+type: general
+
+package: false
+
+rights:
+    - autoconfirmed
+
+peers: []
+
+dependencies:
+    - mediawiki.api
+    - ext.gadget.site-lib
+
+enable: true
+
+files:
+    - Gadget-SpecialWikitext.js
