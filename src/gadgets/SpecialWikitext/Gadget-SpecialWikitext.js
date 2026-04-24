@@ -19,8 +19,7 @@
     } = mw.config.get();
     const api = new mw.Api();
 
-    const getCleanText = (input) =>
-        typeof input === 'string' || input ? `${input}`.trim() : '';
+    const getCleanText = input => (typeof input === 'string' || input ? `${input}`.trim() : '');
 
     /* 与[[Module:SpecialWikitext]]保持一致 */
     const wikiTextKey = '_addText';
@@ -33,9 +32,10 @@
             let text = new_str;
             if (_escape) {
                 const escape_str = JSON.parse(
-                    `[${JSON.stringify(
-                        `${new_str}`.replace(/\\([ux])/gi, '$1'),
-                    ).replace(/\\\\/g, '\\')}]`,
+                    `[${JSON.stringify(`${new_str}`.replace(/\\([ux])/gi, '$1')).replace(
+                        /\\\\/g,
+                        '\\',
+                    )}]`,
                 )[0];
                 text = escape_str;
             }
@@ -43,7 +43,7 @@
         }
         return input_string;
     };
-    const lua_getString = (str) => {
+    const lua_getString = str => {
         let test_str = /[^\n]*\*\//.exec(str);
         if (test_str) {
             test_str = test_str[0] || '';
@@ -62,22 +62,14 @@
         }
         return test_str;
     };
-    const lua_getContentText = (str) => {
+    const lua_getContentText = str => {
         let wikitext = '';
         try {
             str.replace(
-                new RegExp(
-                    `${wikiTextKey}\\s*\\{[^c\\}]*content\\s*:\\s*[^\n]*`,
-                    'g',
-                ),
-                (text) => {
-                    const temp_text = (/content\s*:\s*[^\n]*/.exec(text) || [
-                        'content:',
-                    ])[0]
-                        .replace(
-                            /^[\s\uFEFF\xA0\t\r\n\f ;}]+|[\s\uFEFF\xA0\t\r\n\f ;}]+$/g,
-                            '',
-                        )
+                new RegExp(`${wikiTextKey}\\s*\\{[^c\\}]*content\\s*:\\s*[^\n]*`, 'g'),
+                text => {
+                    const temp_text = (/content\s*:\s*[^\n]*/.exec(text) || ['content:'])[0]
+                        .replace(/^[\s\uFEFF\xA0\t\r\n\f ;}]+|[\s\uFEFF\xA0\t\r\n\f ;}]+$/g, '')
                         .replace(/\s*content\s*:\s*/, '');
                     if (wikitext !== '') {
                         wikitext += '\n';
@@ -91,38 +83,27 @@
         }
         return wikitext;
     };
-    const lua_getObjText = (str) => {
+    const lua_getObjText = str => {
         let wikitext = '';
         try {
-            str.replace(
-                new RegExp(`${wikiTextKey}\\s*[\\=:]\\s*[^\n]*`, 'g'),
-                (text) => {
-                    const temp_text = text
-                        .replace(
-                            /^[\s\uFEFF\xA0\t\r\n\f ;}]+|[\s\uFEFF\xA0\t\r\n\f ;}]+$/g,
-                            '',
-                        )
-                        .replace(
-                            new RegExp(`${wikiTextKey}\\s*[\\=:]\\s*`),
-                            '',
-                        );
-                    if (wikitext !== '') {
-                        wikitext += '\n';
-                    }
-                    wikitext += lua_getString(temp_text);
-                    return text;
-                },
-            );
+            str.replace(new RegExp(`${wikiTextKey}\\s*[\\=:]\\s*[^\n]*`, 'g'), text => {
+                const temp_text = text
+                    .replace(/^[\s\uFEFF\xA0\t\r\n\f ;}]+|[\s\uFEFF\xA0\t\r\n\f ;}]+$/g, '')
+                    .replace(new RegExp(`${wikiTextKey}\\s*[\\=:]\\s*`), '');
+                if (wikitext !== '') {
+                    wikitext += '\n';
+                }
+                wikitext += lua_getString(temp_text);
+                return text;
+            });
         } catch {
             return '';
         }
         return wikitext;
     };
-    const lua_getCSSwikitext = (input_string) => {
+    const lua_getCSSwikitext = input_string => {
         let wikitext = '';
-        const css_text = getCleanText(
-            input_string || $('#wpTextbox1').val() || '',
-        );
+        const css_text = getCleanText(input_string || $('#wpTextbox1').val() || '');
         if (css_text === '') {
             return '';
         }
@@ -130,28 +111,24 @@
         wikitext = lua_addText(wikitext, lua_getObjText(css_text), true);
         return wikitext;
     };
-    const lua_getJSwikitext = (input_string) => {
+    const lua_getJSwikitext = input_string => {
         let wikitext = '';
-        const js_text = getCleanText(
-            input_string || $('#wpTextbox1').val() || '',
-        );
+        const js_text = getCleanText(input_string || $('#wpTextbox1').val() || '');
         if (js_text === '') {
             return '';
         }
         wikitext = lua_addText(wikitext, lua_getObjText(js_text), true);
         return wikitext;
     };
-    const lua_getJSONwikitext = (input_string) => {
+    const lua_getJSONwikitext = input_string => {
         let wikitext = '';
-        const json_text = getCleanText(
-            input_string || $('#wpTextbox1').val() || '',
-        );
+        const json_text = getCleanText(input_string || $('#wpTextbox1').val() || '');
         if (json_text === '') {
             return '';
         }
         try {
             const json_data = JSON.parse(json_text);
-            Object.keys(json_data).forEach((key) => {
+            Object.keys(json_data).forEach(key => {
                 const k = key,
                     v = json_data[key];
                 if (new RegExp(wikiTextKey).exec(k) && typeof v === 'string') {
@@ -178,8 +155,7 @@
         return wikitext;
     };
     const lua_check = (input_string, content_model) => {
-        const contentModel =
-            `${content_model || wgPageContentModel}`.toLowerCase();
+        const contentModel = `${content_model || wgPageContentModel}`.toLowerCase();
         switch (contentModel) {
             case 'json':
                 return lua_getJSONwikitext(input_string);
@@ -221,10 +197,9 @@
         }
         return lang;
     };
-    const loadingFailNotice = () =>
-        $('.mw-_addText-preview-loading-content').html(noticeHTML.fail);
+    const loadingFailNotice = () => $('.mw-_addText-preview-loading-content').html(noticeHTML.fail);
     const removeLoadingNotice = () => $('.mw-_addText-preview-loading').empty();
-    const addParsedWikitext = (html) => {
+    const addParsedWikitext = html => {
         const previewLoading = $('.mw-_addText-preview-loading');
         if (previewLoading.length > 0) {
             previewLoading.html(html);
@@ -322,12 +297,7 @@
             }
             const parsedHTML = getCleanText(parsedWikitext);
             if (parsedHTML !== '') {
-                if (
-                    !$(parsedHTML)
-                        .find('.scribunto-error')
-                        .text()
-                        .includes(temp_module_name)
-                ) {
+                if (!$(parsedHTML).find('.scribunto-error').text().includes(temp_module_name)) {
                     if (typeof callback === 'function') {
                         callback(parsedHTML);
                     } else {
@@ -406,14 +376,9 @@
             ])
         ) {
             if (document.querySelector('.previewnote')) {
-                const previewNode = $(
-                    '.previewnote .mw-message-box-warning > p > b a',
-                );
+                const previewNode = $('.previewnote .mw-message-box-warning > p > b a');
                 if (previewNode.length > 0) {
-                    const path = decodeURI(previewNode.attr('href')).replace(
-                        /^\//,
-                        '',
-                    );
+                    const path = decodeURI(previewNode.attr('href')).replace(/^\//, '');
                     if (path !== wgPageName) {
                         return;
                     }
@@ -446,12 +411,7 @@
             } else {
                 removeLoadingNotice();
             }
-        } else if (
-            mwConfigIfMatchInLowerCase('wgPageContentModel', [
-                'scribunto',
-                'lua',
-            ])
-        ) {
+        } else if (mwConfigIfMatchInLowerCase('wgPageContentModel', ['scribunto', 'lua'])) {
             if (!ifNeedPreview()) {
                 return;
             }
@@ -476,11 +436,7 @@
                 if (tryAddWiki) {
                     addLoadingNotice();
                     mwAddWikiText(tryAddWiki, wgRelevantPageName, true);
-                } else if (
-                    /Module[_ ]wikitext.*_addText/i.exec(
-                        $('.mw-parser-output').text(),
-                    )
-                ) {
+                } else if (/Module[_ ]wikitext.*_addText/i.exec($('.mw-parser-output').text())) {
                     // 预览失效时启用下方一行
                     // mwAddLuaText($tryGetWiki, mw.config.get("wgRelevantPageName"), true);
                 }
@@ -490,10 +446,7 @@
             mwConfigIfMatchInLowerCase('wgCanonicalNamespace', 'special')
         ) {
             const fullPagename = getCleanText(wgCanonicalSpecialPageName);
-            const subPagename = fullPagename.replace(
-                RegExp(`^${wgCanonicalNamespace}:[^/]+`),
-                '',
-            );
+            const subPagename = fullPagename.replace(RegExp(`^${wgCanonicalNamespace}:[^/]+`), '');
             if (fullPagename) {
                 const fullpagename = `${wgCanonicalNamespace}:${fullPagename}`;
                 mwApplyNotice(fullpagename, subPagename);
@@ -506,46 +459,32 @@
         if (!ifNeedPreview()) {
             return;
         }
-        const testcaseList = document.querySelectorAll(
-            '.special-wikitext-preview-testcase',
-        );
+        const testcaseList = document.querySelectorAll('.special-wikitext-preview-testcase');
         if (testcaseList.length <= 0) {
             return;
         }
         const wikitextPackages = [];
         for (const testcaseNode of testcaseList) {
-            const codeNode = testcaseNode.querySelector(
-                '.specialWikitextJSON, pre, .mw-json',
-            );
+            const codeNode = testcaseNode.querySelector('.specialWikitextJSON, pre, .mw-json');
             if (!codeNode) {
                 continue;
             }
-            const lang = getCleanText(
-                codeNode.getAttribute('lang'),
-            ).toLowerCase();
+            const lang = getCleanText(codeNode.getAttribute('lang')).toLowerCase();
             const code = getCleanText(codeNode.innerText);
             if (!code) {
                 continue;
             }
-            if (
-                ['javascript', 'js', 'css', 'json', 'wiki', 'text'].includes(
-                    lang,
-                )
-            ) {
+            if (['javascript', 'js', 'css', 'json', 'wiki', 'text'].includes(lang)) {
                 const addWikitext = getCleanText(lua_check(code, lang));
                 if (addWikitext) {
                     const i = `${wikitextPackages.length}`;
-                    $(testcaseNode)
-                        .attr('data-preview-id', i)
-                        .prepend(noticeHTML.loading);
+                    $(testcaseNode).attr('data-preview-id', i).prepend(noticeHTML.loading);
                     wikitextPackages.push(
                         `<div class="special-wikitext-preview-testcase" data-preview-id="${i}">\n${addWikitext}\n</div>`,
                     );
                 }
             } else if (['lua', 'scribunto'].includes(lang)) {
-                mwAddLuaText(code, true, (wikitext) =>
-                    $(testcaseNode).prepend(wikitext),
-                );
+                mwAddLuaText(code, true, wikitext => $(testcaseNode).prepend(wikitext));
             }
         }
         const wikitextPackage = getCleanText(wikitextPackages.join(''));

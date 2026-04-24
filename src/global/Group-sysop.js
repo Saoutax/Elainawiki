@@ -20,5 +20,6 @@ $(() => {
         $('#wpPageList').val('');
         $('#wpMatch').val('');
         $('#wpReplace').val('');
+        $('#wpSummary').val('// MassEditRegex');
     }
 });
