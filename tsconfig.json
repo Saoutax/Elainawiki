@@ -3,27 +3,30 @@
         "module": "ESnext",
         "moduleResolution": "Bundler",
         "target": "esnext",
-
-        "lib": ["esnext", "dom"],
-        "types": ["node"],
-
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "types": [
+            "node",
+            "jquery"
+        ],
         "sourceMap": true,
         "declaration": true,
         "declarationMap": true,
         "paths": {
-            "@/*": ["./scripts/*"]
+            "@/*": [
+                "./scripts/*"
+            ]
         },
-
         "noUncheckedIndexedAccess": true,
         "exactOptionalPropertyTypes": true,
-
         "noImplicitReturns": true,
         "noImplicitOverride": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
         "noPropertyAccessFromIndexSignature": true,
-
         "strict": true,
         "jsx": "react",
         "verbatimModuleSyntax": true,
@@ -31,7 +34,6 @@
         "noUncheckedSideEffectImports": true,
         "moduleDetection": "force",
         "skipLibCheck": true,
-
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true
     }

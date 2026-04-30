@@ -2,7 +2,7 @@
     "$schema": "https://swc.nodejs.cn/schema.json",
     "jsc": {
         "parser": {
-            "syntax": "ecmascript",
+            "syntax": "typescript",
             "dynamicImport": false
         },
         "target": "es5",

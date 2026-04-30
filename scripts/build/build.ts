@@ -20,6 +20,11 @@ const transpileJs: FileProcessor = async file => {
     return code;
 };
 
+const transpileTs: FileProcessor = async file => {
+    const { code } = await transformFile(file);
+    return code;
+};
+
 const transpileCss: FileProcessor = async file => {
     const source = await readFile(file);
     const { code } = transform({
@@ -47,6 +52,7 @@ const processFiles = async (
     subDir: string,
     processor: FileProcessor,
     filter?: (file: string) => boolean,
+    outExt?: string,
 ) => {
     const files = await FastGlob(pattern, { cwd: SRC_DIR, absolute: true });
 
@@ -55,7 +61,10 @@ const processFiles = async (
             .filter(file => !filter || filter(file))
             .map(async file => {
                 const relPath = relative(resolve(SRC_DIR, subDir), file);
-                const outFile = resolve(DIST_DIR, subDir, relPath);
+                let outFile = resolve(DIST_DIR, subDir, relPath);
+                if (outExt) {
+                    outFile = outFile.replace(/\.[^.]+$/, outExt);
+                }
                 const code = wrapCode(await processor(file));
                 await mkdir(dirname(outFile), { recursive: true });
                 await writeFile(outFile, code);
@@ -65,7 +74,7 @@ const processFiles = async (
 
 const isGadgetEntryFile = (file: string) => {
     const name = basename(file);
-    return /^Gadget-.*\.(js|css)$/.test(name);
+    return /^Gadget-.*\.(js|ts|css)$/.test(name);
 };
 
 const build = async () => {
@@ -76,8 +85,10 @@ const build = async () => {
 
     await Promise.all([
         processFiles('gadgets/*/*.js', 'gadgets', transpileJs, isGadgetEntryFile),
+        processFiles('gadgets/*/*.ts', 'gadgets', transpileTs, isGadgetEntryFile, '.js'),
         processFiles('gadgets/*/*.css', 'gadgets', transpileCss, isGadgetEntryFile),
         processFiles('global/*.js', 'global', transpileJs),
+        processFiles('global/*.ts', 'global', transpileTs, undefined, '.js'),
         processFiles('global/*.css', 'global', transpileCss),
     ]);
 };
