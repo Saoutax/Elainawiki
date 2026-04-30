@@ -96,11 +96,19 @@ $(() => {
             mw.config.set('wgRollbacking', true);
             const summary = rollbackSummary ? `${rollbackSummary} // Rollback` : '// Rollback';
             if (url.searchParams.has('from')) {
+                const getPageTitle = u => {
+                    const titleParam = u.searchParams.get('title');
+                    if (titleParam) {
+                        return titleParam;
+                    }
+                    const match = decodeURIComponent(u.pathname).match(/^\/wiki\/(.+)$/);
+                    return match ? match[1] : null;
+                };
                 try {
                     await api.post({
                         action: 'rollback',
                         assertuser: mw.config.get('wgUserName'),
-                        title: url.searchParams.get('title'),
+                        title: getPageTitle(url),
                         user: url.searchParams.get('from'),
                         summary,
                         token: url.searchParams.get('token'),
