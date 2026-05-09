@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elaina Wiki — 魔女之旅维基首页</title>
+    <link rel="stylesheet" href="MainPage.css">
+    <style>
+        /* Local preview only — simulates wiki skin background */
+        body {
+            margin: 0;
+            padding: 2rem 1rem;
+            background: #e8dfd0;
+            font-family: 'Lora', 'Noto Serif SC', serif;
+        }
+        .ei-root {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        /* Replace magic words with sample data for preview */
+        .ei-stat-number:empty::before {
+            content: '168';
+        }
+        .ei-stat:nth-child(2) .ei-stat-number:empty::before { content: '245'; }
+        .ei-stat:nth-child(3) .ei-stat-number:empty::before { content: '3,210'; }
+        .ei-stat:nth-child(4) .ei-stat-number:empty::before { content: '12'; }
+    </style>
+</head>
+<body>
+
+<!--
+    Elaina Wiki — Main Page Content
+    ================================
+    将此 HTML 粘贴到 wiki 首页（<nowiki> 包裹），CSS 放入 MediaWiki:Common.css。
+
+    Wiki 部署注意：
+    • [[Link]] 是 wikitext 语法，保存到 wiki 后自动解析为内部链接
+    • {{NUMBEROFARTICLES}} 是 MediaWiki 魔术字，自动显示实际统计
+    • [[File:Example.jpg]] 请替换为 wiki 上存在的文件名
+    • Special 页面名可能与本地化版本不同，按需调整
+-->
+
+<div class="ei-root">
+
+    <!-- ═══════════ Hero ═══════════ -->
+    <div class="ei-hero">
+        <div class="ei-hero-emblem">✧</div>
+
+        <h1 class="ei-hero-title">[[Project:关于|Elaina Wiki]]</h1>
+        <p class="ei-hero-subtitle">魔女之旅中文维基</p>
+
+        <p class="ei-hero-welcome">
+            欢迎来到 '''魔女之旅''' 中文维基。<br>
+            本 wiki 收录了关于《魔女之旅》轻小说、动画、漫画及相关作品的信息。
+            正如 Elaina 所到之处皆有故事，这里也由每一位旅者共同书写。
+        </p>
+
+        <div class="ei-stats">
+            <div class="ei-stat">
+                <div class="ei-stat-number">{{NUMBEROFARTICLES}}</div>
+                <div class="ei-stat-label">条目</div>
+            </div>
+            <div class="ei-stat">
+                <div class="ei-stat-number">{{NUMBEROFFILES}}</div>
+                <div class="ei-stat-label">文件</div>
+            </div>
+            <div class="ei-stat">
+                <div class="ei-stat-number">{{NUMBEROFEDITS}}</div>
+                <div class="ei-stat-label">编辑</div>
+            </div>
+            <div class="ei-stat">
+                <div class="ei-stat-number">{{NUMBEROFACTIVEUSERS}}</div>
+                <div class="ei-stat-label">活跃用户</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════ Navigation Cards ═══════════ -->
+    <h2 class="ei-section-title">探索维基</h2>
+
+    <div class="ei-cards">
+
+        <div class="ei-card">
+            <div class="ei-card-icon">✦</div>
+            <p class="ei-card-title">[[:Category:角色|角色]]</p>
+            <p class="ei-card-desc">Elaina、芙兰、沙耶……了解每一位旅者与邂逅之人</p>
+        </div>
+
+        <div class="ei-card">
+            <div class="ei-card-icon">◈</div>
+            <p class="ei-card-title">[[:Category:国家|国家]]</p>
+            <p class="ei-card-desc">星辰之下，Elaina 踏足的每一片土地</p>
+        </div>
+
+        <div class="ei-card">
+            <div class="ei-card-icon">✧</div>
+            <p class="ei-card-title">[[:Category:故事|故事]]</p>
+            <p class="ei-card-desc">每一个旅章，都是一段独特的相遇与回忆</p>
+        </div>
+
+        <div class="ei-card">
+            <div class="ei-card-icon">◆</div>
+            <p class="ei-card-title">[[:Category:动画|动画]]</p>
+            <p class="ei-card-desc">第一季、第二季——在画面中重温旅途</p>
+        </div>
+
+        <div class="ei-card">
+            <div class="ei-card-icon">✿</div>
+            <p class="ei-card-title">[[:Category:世界观|世界观]]</p>
+            <p class="ei-card-desc">魔法、旅行与这个世界的运行法则</p>
+        </div>
+
+        <div class="ei-card">
+            <div class="ei-card-icon">❋</div>
+            <p class="ei-card-title">[[Special:社区|社区]]</p>
+            <p class="ei-card-desc">与同好交流，共同完善这个维基</p>
+        </div>
+
+    </div>
+
+    <!-- ═══════════ Featured Content ═══════════ -->
+    <div class="ei-featured">
+
+        <div class="ei-featured-box">
+            <h3 class="ei-featured-box-title">
+                <span class="ei-icon">★</span> 特色条目
+            </h3>
+            <div class="ei-featured-content">
+                <div class="ei-featured-article">
+                    <div class="ei-featured-article-thumb">[[File:Example.jpg|120x120px|Elaina]]</div>
+                    <div class="ei-featured-article-text">
+                        <p>'''[[Elaina]]'''，本作主角，一位正在旅行的魔女。她拥有着对未知世界的好奇心与敏锐的观察力……</p>
+                        [[Elaina|继续阅读 →]]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ei-featured-box">
+            <h3 class="ei-featured-box-title">
+                <span class="ei-icon">✦</span> 你知道吗
+            </h3>
+            <div class="ei-featured-content">
+                <ul class="ei-trivia-list">
+                    <li>Elaina 的魔女称号源自她所佩戴的星形胸针</li>
+                    <li>《魔女之旅》最初是在「成为小说家吧」上连载的 web 小说</li>
+                    <li>Elaina 的扫帚「翡翠」，是一把会说话的魔法扫帚</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ═══════════ Community ═══════════ -->
+    <div class="ei-community">
+
+        <div class="ei-community-box">
+            <h3 class="ei-community-box-title">加入旅途</h3>
+            <p class="ei-community-desc">
+                每一位路过的旅者都可以在这里留下自己的足迹。<br>
+                参与编辑、上传图片、撰写条目——<br>
+                你的贡献将让这个维基变得更加丰富。
+            </p>
+            [[Special:创建账号|<span class="ei-community-btn">创建账号</span>]]
+        </div>
+
+        <div class="ei-community-box">
+            <h3 class="ei-community-box-title">快速入口</h3>
+            <p class="ei-community-desc">常用页面与社区资源</p>
+            <ul class="ei-wiki-links">
+                <li>[[Special:最近更新|最近更新]]</li>
+                <li>[[Help:编辑指南|编辑指南]]</li>
+                <li>[[Special:随机页面|随机条目]]</li>
+                <li>[[Special:列表文件|文件列表]]</li>
+                <li>[[:Category:索引|站点索引]]</li>
+                <li>[[Project:关于|关于本站]]</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- ═══════════ Footer ═══════════ -->
+    <div class="ei-footer">
+        <p>「每当遇见你，都是一段新的故事。」—— Elaina</p>
+    </div>
+
+</div>
+
+</body>
+</html>

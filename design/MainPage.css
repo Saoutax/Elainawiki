@@ -1,0 +1,558 @@
+/**
+ * Elaina Wiki — Main Page Design
+ * Theme: Traveler's Grimoire（旅行者手记）
+ *
+ * Usage: Add to MediaWiki:Common.css or a site-wide gadget
+ * Companion page content goes on the wiki's main page.
+ */
+
+/* ─── Fonts ─── */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+/* ─── CSS Variables ─── */
+.ei-root {
+    --ei-ink: #1a0e0a;
+    --ei-ink-light: #4a3a32;
+    --ei-parchment: #f5efe6;
+    --ei-parchment-light: #faf7f0;
+    --ei-parchment-dark: #e8dfd0;
+    --ei-purple-deep: #2d1b4e;
+    --ei-purple-mid: #5a3d7a;
+    --ei-purple: #7b4b94;
+    --ei-purple-light: #b08ac0;
+    --ei-gold: #c9a84c;
+    --ei-gold-light: #e0c878;
+    --ei-gold-dark: #a08030;
+    --ei-sepia: #d4c4a8;
+    --ei-shadow: rgba(26, 14, 10, 0.12);
+    --ei-shadow-strong: rgba(26, 14, 10, 0.2);
+    --ei-radius: 12px;
+    --ei-radius-sm: 6px;
+    --ei-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Hero Section ─── */
+.ei-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 3rem 2rem 2.5rem;
+    margin: 0 0 2.5rem;
+    border-radius: var(--ei-radius);
+    background: linear-gradient(165deg, #1a0a2e 0%, #2d1b4e 30%, #3a2560 55%, #2d1b4e 80%, #1a0a2e 100%);
+    color: var(--ei-parchment-light);
+    text-align: center;
+    box-shadow: 0 4px 30px var(--ei-shadow-strong);
+}
+
+/* Star-sparkle background */
+.ei-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(1.5px 1.5px at 25% 60%, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(1px 1px at 45% 15%, rgba(255, 255, 255, 0.7), transparent),
+        radial-gradient(1.2px 1.2px at 60% 75%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(1px 1px at 78% 30%, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(1.3px 1.3px at 90% 55%, rgba(255, 255, 255, 0.6), transparent),
+        radial-gradient(1px 1px at 15% 85%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(1.5px 1.5px at 50% 45%, rgba(255, 215, 0, 0.5), transparent),
+        radial-gradient(1px 1px at 35% 35%, rgba(255, 215, 0, 0.3), transparent),
+        radial-gradient(1.2px 1.2px at 70% 10%, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(1px 1px at 55% 88%, rgba(255, 215, 0, 0.4), transparent),
+        radial-gradient(1.4px 1.4px at 82% 70%, rgba(255, 255, 255, 0.3), transparent);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Decorative star emblem — CSS-only compass rose */
+.ei-hero-emblem {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.25rem;
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--ei-gold);
+    text-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
+    animation: ei-emblem-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes ei-emblem-glow {
+    0% { text-shadow: 0 0 12px rgba(201, 168, 76, 0.2); }
+    100% { text-shadow: 0 0 28px rgba(201, 168, 76, 0.5); }
+}
+
+.ei-hero-title {
+    position: relative;
+    z-index: 2;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 0.25rem;
+    color: var(--ei-parchment-light);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    border: none;
+    padding: 0;
+}
+
+.ei-hero-title a {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.ei-hero-subtitle {
+    position: relative;
+    z-index: 2;
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--ei-gold-light);
+    margin: 0 0 1.25rem;
+    letter-spacing: 0.04em;
+}
+
+.ei-hero-welcome {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+    margin: 0 auto;
+    font-family: 'Lora', 'Noto Serif SC', 'Source Han Serif SC', serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(250, 247, 240, 0.85);
+}
+
+.ei-hero-welcome strong {
+    color: var(--ei-gold-light);
+    font-weight: 600;
+}
+
+/* ─── Decorative divider ─── */
+.ei-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    color: var(--ei-sepia);
+    font-size: 1.2rem;
+}
+
+.ei-divider::before,
+.ei-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ei-sepia), transparent);
+}
+
+/* ─── Stats Bar ─── */
+.ei-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    position: relative;
+    z-index: 2;
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(250, 247, 240, 0.15);
+}
+
+.ei-stat {
+    padding: 0.25rem 1.5rem;
+    text-align: center;
+}
+
+.ei-stat + .ei-stat {
+    border-left: 1px solid rgba(250, 247, 240, 0.12);
+}
+
+.ei-stat-number {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--ei-gold-light);
+    line-height: 1.2;
+}
+
+.ei-stat-label {
+    font-family: 'Lora', serif;
+    font-size: 0.8rem;
+    color: rgba(250, 247, 240, 0.6);
+    letter-spacing: 0.05em;
+}
+
+/* ─── Section Headers ─── */
+.ei-section-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--ei-purple-deep);
+    letter-spacing: 0.06em;
+    text-align: center;
+    margin: 0 0 1.5rem;
+    position: relative;
+    border: none;
+    padding: 0;
+}
+
+.ei-section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    margin: 0.5rem auto 0;
+    background: linear-gradient(90deg, transparent, var(--ei-purple-mid), transparent);
+}
+
+/* ─── Navigation Cards Grid ─── */
+.ei-cards {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.ei-card {
+    position: relative;
+    background: var(--ei-parchment-light);
+    border: 1px solid var(--ei-parchment-dark);
+    border-radius: var(--ei-radius);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: var(--ei-transition);
+    box-shadow: 0 2px 8px var(--ei-shadow);
+    overflow: hidden;
+}
+
+.ei-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ei-purple-mid), var(--ei-gold));
+    opacity: 0;
+    transition: var(--ei-transition);
+}
+
+.ei-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px var(--ei-shadow-strong);
+    border-color: var(--ei-purple-light);
+}
+
+.ei-card:hover::before {
+    opacity: 1;
+}
+
+.ei-card-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 0.75rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(123, 75, 148, 0.08), rgba(201, 168, 76, 0.08));
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--ei-purple-mid);
+    transition: var(--ei-transition);
+}
+
+.ei-card:hover .ei-card-icon {
+    background: linear-gradient(135deg, rgba(123, 75, 148, 0.15), rgba(201, 168, 76, 0.15));
+    transform: scale(1.05);
+}
+
+.ei-card-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin: 0 0 0.25rem;
+}
+
+.ei-card-title a {
+    color: var(--ei-ink) !important;
+    text-decoration: none !important;
+}
+
+.ei-card-title a:hover {
+    color: var(--ei-purple) !important;
+}
+
+.ei-card-desc {
+    font-family: 'Lora', 'Noto Serif SC', serif;
+    font-size: 0.82rem;
+    color: var(--ei-ink-light);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ─── Featured Content ─── */
+.ei-featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+}
+
+.ei-featured-box {
+    background: var(--ei-parchment-light);
+    border: 1px solid var(--ei-parchment-dark);
+    border-radius: var(--ei-radius);
+    padding: 1.5rem 1.5rem 1.75rem;
+    box-shadow: 0 2px 8px var(--ei-shadow);
+}
+
+.ei-featured-box-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: var(--ei-purple-deep);
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--ei-parchment-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-top: none;
+}
+
+.ei-featured-box-title .ei-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+    color: var(--ei-purple-mid);
+    flex-shrink: 0;
+}
+
+.ei-featured-content {
+    font-family: 'Lora', 'Noto Serif SC', serif;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: var(--ei-ink-light);
+}
+
+.ei-featured-content a {
+    color: var(--ei-purple) !important;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+
+.ei-featured-content a:hover {
+    color: var(--ei-purple-deep) !important;
+    text-decoration: underline !important;
+}
+
+/* Featured article layout */
+.ei-featured-article {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.ei-featured-article-thumb {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    border-radius: var(--ei-radius-sm);
+    background: linear-gradient(135deg, var(--ei-parchment-dark), var(--ei-sepia));
+}
+
+.ei-featured-article-text {
+    flex: 1;
+}
+
+.ei-featured-article-text p {
+    margin: 0 0 0.5rem;
+}
+
+.ei-read-more {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ei-gold-dark) !important;
+    margin-top: 0.25rem;
+}
+
+/* ─── Trivia / Quote ─── */
+.ei-quote {
+    font-style: italic;
+    position: relative;
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+    border-left: 3px solid var(--ei-gold);
+    color: var(--ei-ink-light);
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+.ei-quote-attribution {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--ei-purple-mid);
+    text-align: right;
+}
+
+.ei-trivia-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ei-trivia-list li {
+    padding: 0.35rem 0;
+    padding-left: 1.25rem;
+    position: relative;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ei-ink-light);
+    border-bottom: 1px solid var(--ei-parchment-dark);
+}
+
+.ei-trivia-list li:last-child {
+    border-bottom: none;
+}
+
+.ei-trivia-list li::before {
+    content: '✦';
+    position: absolute;
+    left: 0;
+    color: var(--ei-gold);
+    font-size: 0.65rem;
+    top: 0.55rem;
+}
+
+/* ─── Community Section ─── */
+.ei-community {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.ei-community-box {
+    background: linear-gradient(135deg, var(--ei-purple-deep) 0%, #3a2560 100%);
+    border-radius: var(--ei-radius);
+    padding: 1.75rem 1.5rem;
+    color: var(--ei-parchment-light);
+    text-align: center;
+    box-shadow: 0 4px 16px var(--ei-shadow-strong);
+}
+
+.ei-community-box-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    color: var(--ei-gold-light);
+    margin: 0 0 0.75rem;
+    border: none;
+    padding: 0;
+}
+
+.ei-community-desc {
+    font-family: 'Lora', 'Noto Serif SC', serif;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(250, 247, 240, 0.8);
+    margin: 0 0 1.25rem;
+}
+
+.ei-community-btn {
+    display: inline-block;
+    padding: 0.6rem 1.75rem;
+    border: 1px solid var(--ei-gold);
+    border-radius: 100px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ei-gold-light) !important;
+    text-decoration: none !important;
+    transition: var(--ei-transition);
+}
+
+.ei-community-btn:hover {
+    background: var(--ei-gold);
+    color: var(--ei-purple-deep) !important;
+    border-color: var(--ei-gold);
+}
+
+/* Wiki links list */
+.ei-wiki-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.ei-wiki-links li a {
+    display: inline-block;
+    padding: 0.35rem 1rem;
+    background: rgba(250, 247, 240, 0.08);
+    border: 1px solid rgba(250, 247, 240, 0.12);
+    border-radius: 100px;
+    font-family: 'Lora', 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+    color: var(--ei-parchment-light) !important;
+    text-decoration: none !important;
+    transition: var(--ei-transition);
+}
+
+.ei-wiki-links li a:hover {
+    background: rgba(250, 247, 240, 0.15);
+    border-color: var(--ei-gold);
+    color: var(--ei-gold-light) !important;
+}
+
+/* ─── Footer ─── */
+.ei-footer {
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+    font-family: 'Lora', serif;
+    font-size: 0.78rem;
+    color: var(--ei-ink-light);
+    opacity: 0.6;
+    border-top: 1px solid var(--ei-parchment-dark);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1024px) {
+    .ei-cards { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .ei-hero { padding: 2rem 1.25rem 1.75rem; }
+    .ei-hero-title { font-size: 1.8rem; }
+    .ei-hero-subtitle { font-size: 1rem; }
+    .ei-stat { padding: 0.25rem 0.75rem; }
+    .ei-cards { grid-template-columns: repeat(2, 1fr); }
+    .ei-featured { grid-template-columns: 1fr; }
+    .ei-featured-article { flex-direction: column; }
+    .ei-featured-article-thumb { width: 100%; height: 160px; }
+    .ei-community { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    .ei-cards { grid-template-columns: 1fr; }
+    .ei-hero-title { font-size: 1.4rem; }
+    .ei-stat + .ei-stat { border-left: none; }
+}
