@@ -1,5 +1,26 @@
 (() => {
-    const USER_GROUPS = {
+    interface GroupConfig {
+        label: string;
+        color: string;
+        name: string;
+    }
+
+    interface CacheEntry {
+        groups: Array<string>;
+        ts: number;
+    }
+
+    interface UserQueryResponse {
+        query?: {
+            users?: Array<{
+                name?: string;
+                missing?: boolean;
+                groups?: Array<string>;
+            }>;
+        };
+    }
+
+    const USER_GROUPS: Record<string, GroupConfig> = {
         bureaucrat: { label: '政', color: '#6610f2', name: '行政员' },
         sysop: { label: '管', color: '#ec407a', name: '管理员' },
         'interface-admin': {
@@ -15,12 +36,14 @@
     };
 
     const GROUP_ORDER = Object.keys(USER_GROUPS);
-    const cache = new Map();
+    const cache = new Map<string, CacheEntry>();
     const CACHE_TTL = 5 * 60 * 1000;
 
-    const getUserGroups = async usernames => {
-        const uncached = [],
-            result = {};
+    const getUserGroups = async (
+        usernames: Array<string>,
+    ): Promise<Record<string, Array<string>>> => {
+        const uncached: Array<string> = [];
+        const result: Record<string, Array<string>> = {};
 
         for (const name of usernames) {
             const entry = cache.get(name);
@@ -36,19 +59,19 @@
         }
 
         try {
-            const { query } = await new mw.Api().get({
+            const data = (await new mw.Api().get({
                 action: 'query',
                 list: 'users',
                 ususers: uncached.join('|'),
                 usprop: 'groups',
                 formatversion: 2,
-            });
+            })) as UserQueryResponse;
 
-            for (const user of query?.users ?? []) {
+            for (const user of data.query?.users ?? []) {
                 if (!user.missing && user.groups) {
                     const groups = user.groups.filter(g => USER_GROUPS[g]);
-                    result[user.name] = groups;
-                    cache.set(user.name, { groups, ts: Date.now() });
+                    result[user.name!] = groups;
+                    cache.set(user.name!, { groups, ts: Date.now() });
                 }
             }
         } catch (e) {
@@ -58,55 +81,67 @@
         return result;
     };
 
-    const createIndicator = groups => {
+    const createIndicator = (
+        groups: Array<string>,
+    ): HTMLElement | null => {
         if (!groups?.length) {
             return null;
         }
 
         const sup = document.createElement('sup');
-        sup.style.cssText = 'font-size:85%;vertical-align:super;margin-left:2px;line-height:1';
+        sup.style.cssText =
+            'font-size:85%;vertical-align:super;margin-left:2px;line-height:1';
 
         groups
-            .sort((a, b) => GROUP_ORDER.indexOf(a) - GROUP_ORDER.indexOf(b))
+            .sort(
+                (a, b) => GROUP_ORDER.indexOf(a) - GROUP_ORDER.indexOf(b),
+            )
             .forEach((group, i) => {
                 const cfg = USER_GROUPS[group];
                 if (!cfg) {
                     return;
                 }
-                const span = Object.assign(document.createElement('span'), {
-                    textContent: cfg.label,
-                    title: cfg.name,
-                });
-                span.style.cssText = `color:${cfg.color};cursor:help${i ? ';margin-left:1px' : ''}`;
+                const span = Object.assign(
+                    document.createElement('span'),
+                    {
+                        textContent: cfg.label,
+                        title: cfg.name,
+                    },
+                );
+                span.style.cssText = `color:${cfg.color};cursor:help${
+                    i ? ';margin-left:1px' : ''
+                }`;
                 sup.appendChild(span);
             });
 
         return sup;
     };
 
-    const processUserLinks = async () => {
-        const links = [
-            ...document.querySelectorAll(
+    const processUserLinks = async (): Promise<void> => {
+        const links = Array.from(
+            document.querySelectorAll<HTMLAnchorElement>(
                 '.mw-userlink:not([data-gp]), .plainlinks .userlink:not([data-gp])',
             ),
-        ];
+        );
         if (!links.length) {
             return;
         }
 
-        const linkMap = new Map();
+        const linkMap = new Map<string, Array<HTMLAnchorElement>>();
 
         for (const link of links) {
-            link.dataset.gp = '1';
+            link.dataset['gp'] = '1';
             let name = '';
 
             if (link.classList.contains('mw-userlink')) {
-                const m = link.getAttribute('href')?.match(/User:([^/?#]+)/);
-                if (m) {
+                const m = link
+                    .getAttribute('href')
+                    ?.match(/User:([^/?#]+)/);
+                if (m?.[1]) {
                     name = decodeURIComponent(m[1]).replace(/_/g, ' ');
                 }
             } else {
-                name = link.textContent.trim();
+                name = link.textContent!.trim();
             }
 
             if (!name) {
@@ -115,13 +150,13 @@
             if (!linkMap.has(name)) {
                 linkMap.set(name, []);
             }
-            linkMap.get(name).push(link);
+            linkMap.get(name)!.push(link);
         }
 
-        const groups = await getUserGroups([...linkMap.keys()]);
+        const groups = await getUserGroups(Array.from(linkMap.keys()));
 
-        for (const [name, userLinks] of linkMap) {
-            const indicator = createIndicator(groups[name]);
+        for (const [name, userLinks] of Array.from(linkMap)) {
+            const indicator = createIndicator(groups[name] ?? []);
             if (!indicator) {
                 continue;
             }
@@ -133,20 +168,22 @@
         }
     };
 
-    const init = () => {
-        processUserLinks();
+    const init = (): void => {
+        void processUserLinks();
 
         new MutationObserver(mutations => {
             if (
                 mutations.some(m =>
-                    [...m.addedNodes].some(
+                    Array.from(m.addedNodes).some(
                         n =>
                             n.nodeType === 1 &&
-                            n.querySelector?.('.mw-userlink, .plainlinks .userlink'),
+                            (n as Element).querySelector?.(
+                                '.mw-userlink, .plainlinks .userlink',
+                            ),
                     ),
                 )
             ) {
-                setTimeout(processUserLinks, 100);
+                setTimeout(() => void processUserLinks(), 100);
             }
         }).observe(document.body, { childList: true, subtree: true });
     };
