@@ -98,7 +98,7 @@ const generateDefinition = async () => {
     const listPath = resolve('src/gadgets/Gadgets-definition-list.yaml');
     const list = load(await readFile(listPath, 'utf8')) as GadgetList;
 
-    let result = '';
+    let result = '{{Gadgets-definition-top}}\n\n';
     for (const section of list) {
         result += `== ${section.section} ==\n`;
 
