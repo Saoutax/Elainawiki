@@ -1,0 +1,36 @@
+ResourceLoader: true
+
+hidden: false
+
+default: false
+
+supportsUrlLoad: false
+
+skins: []
+
+actions: []
+
+categories: []
+
+namespaces:
+    - 8
+
+contentModels:
+    - wikitext
+
+type: general
+
+package: false
+
+rights: []
+
+peers: []
+
+dependencies:
+    - mediawiki.util
+
+enable: true
+
+files:
+    - Gadget-prettyDefinition.js
+    - Gadget-prettyDefinition.css

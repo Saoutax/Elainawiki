@@ -38,7 +38,14 @@
     padding: 3rem 2rem 2.5rem;
     margin: 0 0 2.5rem;
     border-radius: var(--ei-radius);
-    background: linear-gradient(165deg, #1a0a2e 0%, #2d1b4e 30%, #3a2560 55%, #2d1b4e 80%, #1a0a2e 100%);
+    background: linear-gradient(
+        165deg,
+        #1a0a2e 0%,
+        #2d1b4e 30%,
+        #3a2560 55%,
+        #2d1b4e 80%,
+        #1a0a2e 100%
+    );
     color: var(--ei-parchment-light);
     text-align: center;
     box-shadow: 0 4px 30px var(--ei-shadow-strong);
@@ -84,8 +91,12 @@
 }
 
 @keyframes ei-emblem-glow {
-    0% { text-shadow: 0 0 12px rgba(201, 168, 76, 0.2); }
-    100% { text-shadow: 0 0 28px rgba(201, 168, 76, 0.5); }
+    0% {
+        text-shadow: 0 0 12px rgba(201, 168, 76, 0.2);
+    }
+    100% {
+        text-shadow: 0 0 28px rgba(201, 168, 76, 0.5);
+    }
 }
 
 .ei-hero-title {
@@ -536,23 +547,50 @@
 
 /* ─── Responsive ─── */
 @media (max-width: 1024px) {
-    .ei-cards { grid-template-columns: repeat(3, 1fr); }
+    .ei-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
-    .ei-hero { padding: 2rem 1.25rem 1.75rem; }
-    .ei-hero-title { font-size: 1.8rem; }
-    .ei-hero-subtitle { font-size: 1rem; }
-    .ei-stat { padding: 0.25rem 0.75rem; }
-    .ei-cards { grid-template-columns: repeat(2, 1fr); }
-    .ei-featured { grid-template-columns: 1fr; }
-    .ei-featured-article { flex-direction: column; }
-    .ei-featured-article-thumb { width: 100%; height: 160px; }
-    .ei-community { grid-template-columns: 1fr; }
+    .ei-hero {
+        padding: 2rem 1.25rem 1.75rem;
+    }
+    .ei-hero-title {
+        font-size: 1.8rem;
+    }
+    .ei-hero-subtitle {
+        font-size: 1rem;
+    }
+    .ei-stat {
+        padding: 0.25rem 0.75rem;
+    }
+    .ei-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .ei-featured {
+        grid-template-columns: 1fr;
+    }
+    .ei-featured-article {
+        flex-direction: column;
+    }
+    .ei-featured-article-thumb {
+        width: 100%;
+        height: 160px;
+    }
+    .ei-community {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
-    .ei-cards { grid-template-columns: 1fr; }
-    .ei-hero-title { font-size: 1.4rem; }
-    .ei-stat + .ei-stat { border-left: none; }
+    .ei-cards {
+        grid-template-columns: 1fr;
+    }
+    .ei-hero-title {
+        font-size: 1.4rem;
+    }
+    .ei-stat + .ei-stat {
+        border-left: none;
+    }
 }

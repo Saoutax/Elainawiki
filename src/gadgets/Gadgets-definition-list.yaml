@@ -3,6 +3,7 @@
       - popups
       - MarkRights
       - colorLinks
+      - prettyDefinition
 
 - section: Edit
   gadgets:

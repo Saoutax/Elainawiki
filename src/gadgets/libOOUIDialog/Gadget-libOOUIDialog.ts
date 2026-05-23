@@ -1,10 +1,7 @@
 declare global {
     interface Window {
         oouiDialog: {
-            alert: (
-                text: string | JQuery,
-                options?: Partial<OouiDialogOptions>,
-            ) => Promise<void>;
+            alert: (text: string | JQuery, options?: Partial<OouiDialogOptions>) => Promise<void>;
             confirm: (
                 text: string | JQuery,
                 options?: Partial<OouiDialogOptions>,
@@ -38,11 +35,9 @@ interface OouiDialogOptions {
                 _option?: Partial<OouiDialogOptions>,
             ): Promise<unknown> => {
                 const { sizes } = OO.ui.WindowManager.static;
-                const sizeNames = Object.keys(sizes).filter(
-                    s => typeof sizes[s]!.width === 'number',
-                ).sort(
-                    (a, b) => (sizes[a]!.width as number) - (sizes[b]!.width as number),
-                );
+                const sizeNames = Object.keys(sizes)
+                    .filter(s => typeof sizes[s]!.width === 'number')
+                    .sort((a, b) => (sizes[a]!.width as number) - (sizes[b]!.width as number));
                 const defaultSize = sizeNames[0]!;
 
                 const option: Partial<OouiDialogOptions> = _option ?? {};
@@ -61,17 +56,15 @@ interface OouiDialogOptions {
                         s => (sizes[s]!.width as number) < windowWidth,
                     );
                     if (acceptableSize.length > 0) {
-                        setup.size = option.size &&
-                            acceptableSize.includes(option.size)
-                            ? option.size
-                            : acceptableSize[acceptableSize.length - 1]!;
+                        setup.size =
+                            option.size && acceptableSize.includes(option.size)
+                                ? option.size
+                                : acceptableSize[acceptableSize.length - 1]!;
                     } else {
                         setup.size = defaultSize;
                     }
                 } else {
-                    setup.size = option.size && option.size in sizes
-                        ? option.size
-                        : defaultSize;
+                    setup.size = option.size && option.size in sizes ? option.size : defaultSize;
                 }
 
                 if (method === 'prompt') {
@@ -81,12 +74,8 @@ interface OouiDialogOptions {
                     };
                     setup.textInput = new OO.ui.TextInputWidget(config);
                     if (option.required) {
-                        setup.textInput.setIndicator(
-                            config.indicator || 'required',
-                        );
-                        setup.textInput.setValidation(
-                            config.validate || 'non-empty',
-                        );
+                        setup.textInput.setIndicator(config.indicator || 'required');
+                        setup.textInput.setValidation(config.validate || 'non-empty');
                     }
                 }
 
@@ -116,7 +105,9 @@ interface OouiDialogOptions {
                                     ...option,
                                     ...setup,
                                 },
-                            ).done(resolve).fail(reject);
+                            )
+                                .done(resolve)
+                                .fail(reject);
                         });
 
                         try {
@@ -149,6 +140,5 @@ interface OouiDialogOptions {
     ) as unknown as Window['oouiDialog'];
 
     const sanity = $('<span>');
-    window.oouiDialog.sanitize = (text: string): string =>
-        sanity.text(text).html();
+    window.oouiDialog.sanitize = (text: string): string => sanity.text(text).html();
 })();

@@ -81,36 +81,26 @@
         return result;
     };
 
-    const createIndicator = (
-        groups: Array<string>,
-    ): HTMLElement | null => {
+    const createIndicator = (groups: Array<string>): HTMLElement | null => {
         if (!groups?.length) {
             return null;
         }
 
         const sup = document.createElement('sup');
-        sup.style.cssText =
-            'font-size:85%;vertical-align:super;margin-left:2px;line-height:1';
+        sup.style.cssText = 'font-size:85%;vertical-align:super;margin-left:2px;line-height:1';
 
         groups
-            .sort(
-                (a, b) => GROUP_ORDER.indexOf(a) - GROUP_ORDER.indexOf(b),
-            )
+            .sort((a, b) => GROUP_ORDER.indexOf(a) - GROUP_ORDER.indexOf(b))
             .forEach((group, i) => {
                 const cfg = USER_GROUPS[group];
                 if (!cfg) {
                     return;
                 }
-                const span = Object.assign(
-                    document.createElement('span'),
-                    {
-                        textContent: cfg.label,
-                        title: cfg.name,
-                    },
-                );
-                span.style.cssText = `color:${cfg.color};cursor:help${
-                    i ? ';margin-left:1px' : ''
-                }`;
+                const span = Object.assign(document.createElement('span'), {
+                    textContent: cfg.label,
+                    title: cfg.name,
+                });
+                span.style.cssText = `color:${cfg.color};cursor:help${i ? ';margin-left:1px' : ''}`;
                 sup.appendChild(span);
             });
 
@@ -134,9 +124,7 @@
             let name = '';
 
             if (link.classList.contains('mw-userlink')) {
-                const m = link
-                    .getAttribute('href')
-                    ?.match(/User:([^/?#]+)/);
+                const m = link.getAttribute('href')?.match(/User:([^/?#]+)/);
                 if (m?.[1]) {
                     name = decodeURIComponent(m[1]).replace(/_/g, ' ');
                 }
@@ -177,9 +165,7 @@
                     Array.from(m.addedNodes).some(
                         n =>
                             n.nodeType === 1 &&
-                            (n as Element).querySelector?.(
-                                '.mw-userlink, .plainlinks .userlink',
-                            ),
+                            (n as Element).querySelector?.('.mw-userlink, .plainlinks .userlink'),
                     ),
                 )
             ) {
