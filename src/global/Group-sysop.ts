@@ -21,5 +21,6 @@ $(() => {
         $('#wpMatch').val('');
         $('#wpReplace').val('');
         $('#wpSummary').val('// MassEditRegex');
+        $('#wpSummaryLabel').text('摘要：');
     }
 });
