@@ -10,6 +10,7 @@ const DIST_DIR = resolve('dist');
 const banner = `/**
  * -------------------------------------------------------------------------
  * !!! DON'T MODIFY THIS PAGE MANUALLY, YOUR CHANGES WILL BE OVERWRITTEN !!!
+ * !!!       Repository URL: https://github.com/Saoutax/Elainawiki       !!!
  * -------------------------------------------------------------------------
  */`;
 
