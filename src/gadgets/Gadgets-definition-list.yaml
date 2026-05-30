@@ -22,7 +22,6 @@
       - SiteScripts
       - SiteStyles
       - SiteTemplate
-      - SpecialWikitext
       - LocalObjectStorage
       - site-lib
       - libCachedCode
