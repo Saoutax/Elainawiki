@@ -17,10 +17,7 @@ $(() => {
 
     // Special:MassEditRegex
     if (wgCanonicalSpecialPageName === 'MassEditRegex') {
-        // $('#wpPageList').val('');
-        // $('#wpMatch').val('');
-        // $('#wpReplace').val('');
-        // $('#wpSummary').val('// MassEditRegex');
         $('#wpSummaryLabel').text('摘要：');
+        document.querySelector('thead')?.removeAttribute('class');
     }
 });

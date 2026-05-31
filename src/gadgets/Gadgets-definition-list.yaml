@@ -26,5 +26,4 @@
       - LocalObjectStorage
       - site-lib
       - libCachedCode
-      - libPolyfill
       - libOOUIDialog
