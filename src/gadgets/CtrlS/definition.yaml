@@ -1,0 +1,34 @@
+ResourceLoader: true
+
+hidden: false
+
+default: true
+
+supportsUrlLoad: false
+
+skins: []
+
+actions:
+    - edit
+
+categories: []
+
+namespaces: []
+
+contentModels: []
+
+type: general
+
+package: false
+
+rights:
+    - edit
+
+peers: []
+
+dependencies: []
+
+enable: true
+
+files:
+    - Gadget-CtrlS.js

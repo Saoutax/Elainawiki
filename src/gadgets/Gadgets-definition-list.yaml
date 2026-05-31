@@ -9,6 +9,7 @@
   gadgets:
       - Wikiplus
       - Wikiplus-highlight
+      - CtrlS
 
 - section: Admin
   gadgets:
