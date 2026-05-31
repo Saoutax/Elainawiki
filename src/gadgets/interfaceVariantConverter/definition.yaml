@@ -33,7 +33,7 @@ dependencies:
     - mediawiki.api
     - oojs-ui
     - ext.gadget.site-lib
-    - ext.gadget.libPolyfill
+    # - ext.gadget.libPolyfill
     - ext.gadget.libCachedCode
 
 enable: true

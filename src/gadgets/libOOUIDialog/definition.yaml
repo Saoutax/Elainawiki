@@ -47,7 +47,7 @@ dependencies:
     - oojs-ui.styles.icons-movement
     - oojs-ui.styles.icons-user
     - oojs-ui.styles.icons-wikimedia
-    - ext.gadget.libPolyfill
+    # - ext.gadget.libPolyfill
 
 enable: true
 
