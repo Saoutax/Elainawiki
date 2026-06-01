@@ -4,6 +4,8 @@
       - MarkRights
       - colorLinks
       - prettyDefinition
+      - HeimuToggle
+      - HeimuToggleDefaultOn
 
 - section: Edit
   gadgets:
@@ -27,3 +29,4 @@
       - site-lib
       - libCachedCode
       - libOOUIDialog
+      - libBottomRightCorner
